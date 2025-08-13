@@ -5,8 +5,10 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Ticket;
+use App\Models\Pemohon;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Models\LayananInformasi;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -14,6 +16,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\CheckboxList;
 use App\Filament\Resources\TicketResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TicketResource\RelationManagers;
@@ -42,7 +45,40 @@ class TicketResource extends Resource
                 Select::make('master_layanan_informasi_id')
                     ->relationship('jenisLayanan', 'name')
                     ->label('Kategori Layanan Informasi')
-                    ->required(),
+                    ->required()
+                    ->reactive(),
+
+                TextInput::make('tujuan_permohonan_informasi')
+                    ->label('Tujuan Permohonan Informasi')
+                    ->visible(function (callable $get) {
+                        return optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))->name === 'Permohonan Informasi';
+                    }),
+
+                Select::make('master_kat_informasi_id')
+                    ->relationship('kategoriInformasi', 'name')
+                    ->label('Cara Memperoleh Informasi')
+                    ->required()
+                    ->reactive()
+                    ->visible(function (callable $get) {
+                        return optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))->name === 'Permohonan Informasi';
+                    }),
+
+                TextInput::make('tujuan_keberatan')
+                    ->label('Tujuan Mengajukan Keberatan')
+                    ->visible(
+                        fn(callable $get) =>
+                        optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))
+                            ->name === 'Pengajuan Keberatan'
+                    ),
+
+                CheckboxList::make('kategoriKeberatan')
+                    ->relationship('kategoriKeberatan', 'name')
+                    ->label('Alasan Mengajukan Keberatan')
+                    ->visible(
+                        fn(callable $get) =>
+                        optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))->name === 'Pengajuan Keberatan'
+                    ),
+
 
                 TextInput::make('nama_lengkap')
                     ->required()
@@ -50,7 +86,8 @@ class TicketResource extends Resource
                 Select::make('master_kat_pemohon_id')
                     ->relationship('kategoriPemohon', 'name')
                     ->label('Kategori Pemohon')
-                    ->required(),
+                    ->required()
+                    ->reactive(),
                 TextInput::make('nomor_identitas')
                     ->label('Nomor Identitas')
                     ->required(),
@@ -60,6 +97,18 @@ class TicketResource extends Resource
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg'])
                     ->maxSize(1024) // KB
                     ->required(),
+                FileUpload::make('lampiran_akta')
+                    ->label('Lampiran Akta Pendirian Badan Hukum')
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg'])
+                    ->directory('lampiran-akta')
+                    ->maxSize(1024)
+                    ->visible(
+                        fn(callable $get) =>
+                        in_array(
+                            optional(\App\Models\Pemohon::find($get('master_kat_pemohon_id')))->name,
+                            ['LSM/NGO', 'Instansi Pemerintah']
+                        )
+                    ),
                 TextInput::make('email')
                     ->email()
                     ->required(),
@@ -74,13 +123,93 @@ class TicketResource extends Resource
                     ->required(),
                 Textarea::make('rincian_informasi')
                     ->label('Rincian Informasi')
-                    ->required(),
+                    ->required()
+                    ->visible(
+                        fn(callable $get) =>
+                        optional(LayananInformasi::find($get('master_layanan_informasi_id')))
+                            ->name !== 'Pengaduan Penyalahgunaan Wewenang / Pelanggaran Pejabat'
+                    ),
                 FileUpload::make('lampiran_dukung')
                     ->label('Lampiran Data Dukung')
                     ->directory('lampiran-dukung')
                     ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
-                    ->maxSize(1024) // KB
-                    ->nullable(),
+                    ->maxSize(1024)
+                    ->nullable()
+                    ->visible(
+                        fn(callable $get) =>
+                        optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))
+                            ->name !== 'Pengaduan Penyalahgunaan Wewenang / Pelanggaran Mitra Kerja'
+                            && optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))
+                            ->name !== 'Pengaduan Penyalahgunaan Wewenang / Pelanggaran Pejabat'
+                            && optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))
+                            ->name !== 'Pengajuan Keberatan'
+                    ),
+
+                TextInput::make('nama_pejabat')
+                    ->label('Nama Pejabat')
+                    ->visible(
+                        fn(callable $get) =>
+                        optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))
+                            ->name === 'Pengaduan Penyalahgunaan Wewenang / Pelanggaran Pejabat'
+                    ),
+                TextInput::make('nama_mitra')
+                    ->label('Nama Mitra')
+                    ->visible(
+                        fn(callable $get) =>
+                        optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))
+                            ->name === 'Pengaduan Penyalahgunaan Wewenang / Pelanggaran Mitra Kerja'
+                    ),
+
+                TextInput::make('jabatan_pejabat')
+                    ->label('Jabatan')
+                    ->visible(
+                        fn(callable $get) =>
+                        optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))
+                            ->name === 'Pengaduan Penyalahgunaan Wewenang / Pelanggaran Pejabat'
+                    ),
+                TextInput::make('jabatan_mitra')
+                    ->label('Jabatan')
+                    ->visible(
+                        fn(callable $get) =>
+                        optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))
+                            ->name === 'Pengaduan Penyalahgunaan Wewenang / Pelanggaran Mitra Kerja'
+                    ),
+
+                Textarea::make('penyalahgunaan_pejabat')
+                    ->label('Penyalahgunaan yang Dilakukan')
+                    ->visible(
+                        fn(callable $get) =>
+                        optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))
+                            ->name === 'Pengaduan Penyalahgunaan Wewenang / Pelanggaran Pejabat'
+                    ),
+                Textarea::make('penyalahgunaan_mitra')
+                    ->label('Penyalahgunaan yang Dilakukan')
+                    ->visible(
+                        fn(callable $get) =>
+                        optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))
+                            ->name === 'Pengaduan Penyalahgunaan Wewenang / Pelanggaran Mitra Kerja'
+                    ),
+
+                FileUpload::make('lampiran_bukti_pejabat')
+                    ->label('Lampiran Bukti Berkas')
+                    ->directory('lampiran-bukti')
+                    ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'])
+                    ->maxSize(1024)
+                    ->visible(
+                        fn(callable $get) =>
+                        optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))
+                            ->name === 'Pengaduan Penyalahgunaan Wewenang / Pelanggaran Pejabat'
+                    ),
+                FileUpload::make('lampiran_bukti_mitra')
+                    ->label('Lampiran Bukti Berkas')
+                    ->directory('lampiran-bukti')
+                    ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'])
+                    ->maxSize(1024)
+                    ->visible(
+                        fn(callable $get) =>
+                        optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))
+                            ->name === 'Pengaduan Penyalahgunaan Wewenang / Pelanggaran Mitra Kerja'
+                    ),
             ]);
     }
 

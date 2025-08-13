@@ -18,6 +18,8 @@ class Ticket extends Model
         'master_kat_pemohon_id',
         'master_kat_bidang_id',
         'master_layanan_informasi_id',
+        'master_kat_informasi_id',
+        'master_kat_keberatan_id',
         'nama_lengkap',
         'nomor_identitas',
         'lampiran_identitas',
@@ -27,6 +29,14 @@ class Ticket extends Model
         'rincian_informasi',
         'lampiran_dukung',
         'status',
+        'nama_pejabat',
+        'jabatan',
+        'lampiran_apbh',
+        'tujuan_permohonan_informasi',
+        'tujuan_keberatan',
+        'nama_mitra',
+        'penyalahgunaan',
+        'lampiran_berkas',
         'created_by',
         'updated_by',
         'deleted_by',
@@ -47,8 +57,13 @@ class Ticket extends Model
         return $this->belongsTo(Bidang::class, 'master_kat_bidang_id');
     }
 
-    // public function kategoriInformasi()
-    // {
-    //     return $this->belongsTo(Informasi::class, 'master_kat_informasi_id');
-    // }
+    public function kategoriInformasi()
+    {
+        return $this->belongsTo(Informasi::class, 'master_kat_informasi_id');
+    }
+    public function kategoriKeberatan()
+    {
+        return $this->belongsToMany(KatKeberatan::class, 'ticket_kat_keberatan', 'ticket_id', 'kat_keberatan_id');
+    }
+
 }
