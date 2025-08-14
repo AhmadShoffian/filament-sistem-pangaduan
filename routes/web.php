@@ -1,15 +1,21 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
+use App\Models\LayananInformasi;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
 
-Route::get('/', function () {
-    return view('home');
-});
+// Route::get('/', function () {
+//     $jenisLayanan = LayananInformasi::all();
+//     return view('home', compact('jenisLayanan'));
+// });
+
+Route::get('/', [HomeController::class, 'index']);
+Route::post('/home/store', [HomeController::class, 'store'])->name('home.store');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
