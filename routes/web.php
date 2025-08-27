@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\LayananInformasi;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
@@ -16,6 +17,17 @@ use App\Http\Controllers\ProfileController;
 
 Route::get('/', [HomeController::class, 'index']);
 Route::post('/home/store', [HomeController::class, 'store'])->name('home.store');
+Route::get('/home/lacak', [HomeController::class, 'permohonan'])->name('permohonan.lacak');
+Route::get('/home/permohonan', [HomeController::class, 'data'])->name('permohonan.data');
+Route::post('/ticket/{id}/comment', [HomeController::class, 'storeComment'])->name('ticket.comment');
+
+Route::get('/test-mail', function () {
+    Mail::raw('Tes kirim email dari Laravel.', function ($message) {
+        $message->to('dummy@example.com')
+                ->subject('Test Mailtrap');
+    });
+    return 'Email test dikirim';
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');

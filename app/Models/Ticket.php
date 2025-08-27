@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Testing\Fluent\Concerns\Has;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -23,6 +22,7 @@ class Ticket extends Model
         'nama_lengkap',
         'nomor_identitas',
         'lampiran_identitas',
+        'lampiran_apbh',
         'email',
         'alamat',
         'no_telepon',
@@ -30,18 +30,21 @@ class Ticket extends Model
         'lampiran_dukung',
         'status',
         'nama_pejabat',
-        'jabatan',
-        'lampiran_apbh',
+        'jabatan_pejabat',
+        'nama_mitra',
+        'jabatan_mitra',
+        'penyalahgunaan_pejabat',
+        'penyalahgunaan_mitra',
+        'lampiran_bukti_pejabat',
+        'lampiran_bukti_mitra',
         'tujuan_permohonan_informasi',
         'tujuan_keberatan',
-        'nama_mitra',
-        'penyalahgunaan',
-        'lampiran_berkas',
         'created_by',
         'updated_by',
         'deleted_by',
     ];
 
+    // RELASI
     public function jenisLayanan()
     {
         return $this->belongsTo(LayananInformasi::class, 'master_layanan_informasi_id');
@@ -61,9 +64,14 @@ class Ticket extends Model
     {
         return $this->belongsTo(Informasi::class, 'master_kat_informasi_id');
     }
+
     public function kategoriKeberatan()
     {
         return $this->belongsToMany(KatKeberatan::class, 'ticket_kat_keberatan', 'ticket_id', 'kat_keberatan_id');
     }
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

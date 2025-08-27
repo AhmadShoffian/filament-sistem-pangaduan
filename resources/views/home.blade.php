@@ -151,9 +151,11 @@
                     </p>
                     <div class="flex space-x-2">
                         <!-- Button: Lacak Permohonan (Aktif) -->
-                        <button type="button" class="btn-lacak">
+                        <button type="button" class="btn-lacak"
+                            onclick="window.location.href='{{ route('permohonan.lacak') }}'">
                             Lacak Permohonan
                         </button>
+
 
 
 
@@ -168,7 +170,8 @@
                     </div>
 
                     <div class="subscribe-section mt-5">
-                        <form action="#" method="GET" class="subscribe-form wow fadeInRight" data-wow-delay=".4s" style="color:#000000">
+                        <form action="#" method="GET" class="subscribe-form wow fadeInRight" data-wow-delay=".4s"
+                            style="color:#000000">
                             <input type="text" name="ticket_number" id="ticket_number" value=""
                                 placeholder="Lacak Permohonan" required>
                             <button type="submit"><i class="fas fa-search"></i></button>
@@ -249,6 +252,27 @@
                     <!-- Session Status (empty div for spacing matching Laravel app) -->
                     <div class="mb-4"></div>
 
+                    @if (session('success'))
+                        <div id="alert-success"
+                            class="mb-4 p-4 rounded-md bg-green-100 text-green-800 border border-green-300">
+                            <strong>Berhasil!</strong> {{ session('success') }}
+                        </div>
+
+                        <script>
+                            setTimeout(() => {
+                                const alert = document.getElementById('alert-success');
+                                if (alert) {
+                                    alert.style.transition = 'opacity 0.5s ease';
+                                    alert.style.opacity = '0';
+                                    setTimeout(() => alert.remove(), 500); 
+                                }
+                            }, 3000); 
+                        </script>
+                    @endif
+
+                    
+
+
                     <form action="{{ route('home.store') }}" method="POST" class="space-y-5"
                         enctype="multipart/form-data">
                         @csrf
@@ -256,14 +280,11 @@
                             <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">
                                 <b>Jenis Layanan Informasi</b> <span class="text-red-500">*</span>
                             </label>
-                            <select name="subject" id="subject" required
+                            <select name="subject" id="subject" 
                                 class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white">
                                 <option value="">Pilih jenis layanan</option>
                                 @foreach ($jenisLayanan as $layanan)
-                                    <option value="{{ $layanan->id }}"
-                                        data-slug="{{ Str::slug($layanan->name, '-') }}">
-                                        {{ $layanan->name }}
-                                    </option>
+                                    <option value="{{ $layanan->id }}">{{ $layanan->name }}</option>
                                 @endforeach
                             </select>
 
@@ -366,7 +387,7 @@
                             <label for="rincian_informasi" class="block text-gray-700 font-medium mb-2">
                                 Rincian Informasi <span class="text-red-500">*</span>
                             </label>
-                            <textarea name="rincian_informasi" id="rincian_informasi" rows="4" required
+                            <textarea name="rincian_informasi" id="rincian_informasi" rows="4" 
                                 class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-y"></textarea>
                             <p class="text-red-500 text-sm mt-1 hidden" id="rincian_informasi-error">Tujuan wajib
                                 diisi.</p>
@@ -395,7 +416,7 @@
                                 <label for="nama_pejabat" class="block text-gray-700 font-medium mb-2">
                                     Nama Pejabat <span class="text-red-500">*</span>
                                 </label>
-                                <input id="nama_pejabat" type="text" name="nama_pejabat" 
+                                <input id="nama_pejabat" type="text" name="nama_pejabat"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
                                 <p class="text-red-500 text-sm mt-1 hidden" id="nama_pejabat-error">Nama pejabat wajib
                                     diisi.</p>
@@ -405,7 +426,7 @@
                                 <label for="jabatan" class="block text-gray-700 font-medium mb-2">
                                     Jabatan <span class="text-red-500">*</span>
                                 </label>
-                                <input id="jabatan" type="text" name="jabatan" 
+                                <input id="jabatan" type="text" name="jabatan"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
                                 <p class="text-red-500 text-sm mt-1 hidden" id="jabatan-error">Jabatan wajib
                                     diisi.</p>
@@ -417,7 +438,7 @@
                                 <label for="nama_mitra" class="block text-gray-700 font-medium mb-2">
                                     Nama Mitra <span class="text-red-500">*</span>
                                 </label>
-                                <input id="nama_mitra" type="text" name="nama_mitra" 
+                                <input id="nama_mitra" type="text" name="nama_mitra"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
                                 <p class="text-red-500 text-sm mt-1 hidden" id="nama_mitra-error">Nama mitra wajib
                                     diisi.</p>
@@ -427,18 +448,18 @@
                                 <label for="jabatan_mitra" class="block text-gray-700 font-medium mb-2">
                                     Jabatan <span class="text-red-500">*</span>
                                 </label>
-                                <input id="jabatan_mitra" type="text" name="jabatan_mitra" 
+                                <input id="jabatan_mitra" type="text" name="jabatan_mitra"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
                                 <p class="text-red-500 text-sm mt-1 hidden" id="jabatan_mitra-error">Jabatan wajib
                                     diisi.</p>
                             </div>
                         </div>
 
-                        <div class="mb-6">
+                        <div class="mb-6" id="field-penyalahgunaan">
                             <label for="penyalahgunaan" class="block text-gray-700 font-medium mb-2">
                                 Penyalahgunaan yang dilakukan <span class="text-red-500">*</span>
                             </label>
-                            <textarea name="penyalahgunaan" id="penyalahgunaan" rows="4" 
+                            <textarea name="penyalahgunaan" id="penyalahgunaan" rows="4"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-y"></textarea>
                             <p class="text-red-500 text-sm mt-1 hidden" id="penyalahgunaan-error">Tujuan wajib
                                 diisi.</p>
@@ -457,7 +478,7 @@
                                 maksimal <strong>1Mb</strong></small>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-4" id="field-sfiles">
                             <label for="sfiles" class="block text-gray-700 font-medium mb-2">
                                 Berkas Bukti
                             </label>
@@ -474,7 +495,7 @@
                             <label for="keberatan" class="block text-gray-700 font-medium mb-2">
                                 Tujuan Mengajukan Keberatan <span class="text-red-500">*</span>
                             </label>
-                            <textarea name="keberatan" id="keberatan" rows="4" 
+                            <textarea name="keberatan" id="keberatan" rows="4"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-y"></textarea>
                             <p class="text-red-500 text-sm mt-1 hidden" id="keberatan-error">Tujuan wajib diisi.</p>
                         </div>
@@ -482,7 +503,7 @@
                             <label for="purpose" class="block text-gray-700 font-medium mb-2">
                                 Tujuan Permohonan Informasi <span class="text-red-500">*</span>
                             </label>
-                            <textarea name="purpose" id="purpose" rows="4" 
+                            <textarea name="purpose" id="purpose" rows="4"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-y"></textarea>
                             <p class="text-red-500 text-sm mt-1 hidden" id="purpose-error">Tujuan wajib diisi.</p>
                         </div>
@@ -630,7 +651,7 @@
     });
 </script> --}}
 
-<script>
+{{-- <script>
     document.addEventListener("DOMContentLoaded", function() {
         const subjectSelect = document.getElementById("subject");
         if (!subjectSelect) return; 
@@ -699,6 +720,120 @@
             }
         });
     });
+</script> --}}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const subjectSelect = document.getElementById("subject");
+        if (!subjectSelect) return;
+
+        const layananMapping = @json($jenisLayanan->pluck('name', 'id'));
+
+        const safeClosest = (el, selector) => el ? el.closest(selector) : null;
+
+        // ambil wrapper & input untuk setiap field
+        const tujuanInfoField = safeClosest(document.getElementById("purpose"), ".mb-6");
+        const tujuanInfoInput = document.getElementById("purpose");
+
+        const getInfoWrapper = document.querySelector(".info");
+        const getInfoInput = getInfoWrapper?.querySelector("select");
+
+        const tujuanKeberatanField = safeClosest(document.getElementById("keberatan"), ".mb-6");
+        const tujuanKeberatanInput = document.getElementById("keberatan");
+
+        const alasanKeberatanField = document.querySelector("#objection-error")?.parentElement || null;
+        const alasanKeberatanInputs = document.querySelectorAll("input[name='objection[]']");
+
+        const namapejabatFields = safeClosest(document.getElementById("nama_pejabat"), ".mb-6");
+        const pejabatFields = safeClosest(document.getElementById("jabatan"), ".mb-6");
+        const namaPejabatInput = document.getElementById("nama_pejabat");
+        const jabatanPejabatInput = document.getElementById("jabatan");
+
+        const namamitraFields = safeClosest(document.getElementById("nama_mitra"), ".mb-6");
+        const mitraFields = safeClosest(document.getElementById("jabatan_mitra"), ".mb-6");
+        const namaMitraInput = document.getElementById("nama_mitra");
+        const jabatanMitraInput = document.getElementById("jabatan_mitra");
+
+        const penyalahgunaanField = safeClosest(document.getElementById("penyalahgunaan"), ".mb-6");
+        const penyalahgunaanInput = document.getElementById("penyalahgunaan");
+
+        const lampiranDataDukung = safeClosest(document.getElementById("dfiles"), ".mb-4");
+        const lampiranBuktiBerkas = safeClosest(document.getElementById("sfiles"), ".mb-4");
+
+        const rincianInformasiField = safeClosest(document.getElementById("rincian_informasi"), ".mb-6");
+
+        // helper toggle required
+        function showField(wrapper, input) {
+            if (wrapper) wrapper.style.display = "block";
+            if (input) input.setAttribute("required", "required");
+        }
+
+        function hideField(wrapper, input) {
+            if (wrapper) wrapper.style.display = "none";
+            if (input) input.removeAttribute("required");
+        }
+
+        function hideAll() {
+            hideField(tujuanInfoField, tujuanInfoInput);
+            if (getInfoWrapper) {
+                getInfoWrapper.style.display = "none";
+                if (getInfoInput) getInfoInput.removeAttribute("required");
+            }
+            hideField(tujuanKeberatanField, tujuanKeberatanInput);
+            if (alasanKeberatanField) alasanKeberatanField.style.display = "none";
+            // alasanKeberatanInputs.forEach(cb => cb.removeAttribute("required"));
+            alasanKeberatanInputs.forEach(cb => cb.required = false);
+
+
+            hideField(namapejabatFields, namaPejabatInput);
+            hideField(pejabatFields, jabatanPejabatInput);
+            hideField(namamitraFields, namaMitraInput);
+            hideField(mitraFields, jabatanMitraInput);
+            hideField(penyalahgunaanField, penyalahgunaanInput);
+
+            if (lampiranDataDukung) lampiranDataDukung.style.display = "block";
+            if (lampiranBuktiBerkas) lampiranBuktiBerkas.style.display = "none";
+            if (rincianInformasiField) rincianInformasiField.style.display = "block";
+        }
+
+        hideAll();
+
+        subjectSelect.addEventListener("change", function() {
+            hideAll();
+            const selectedId = this.value;
+            const layananName = (layananMapping[selectedId] || "").toLowerCase();
+
+            if (layananName === "permohonan informasi") {
+                showField(tujuanInfoField, tujuanInfoInput);
+                if (getInfoWrapper) {
+                    getInfoWrapper.style.display = "block";
+                    if (getInfoInput) getInfoInput.setAttribute("required", "required");
+                }
+            } else if (layananName.includes("pengajuan keberatan")) {
+                showField(tujuanKeberatanField, tujuanKeberatanInput);
+                if (alasanKeberatanField) alasanKeberatanField.style.display = "block";
+                if (alasanKeberatanInputs.length > 0) {
+                    // minimal 1 required → kasih ke checkbox pertama
+                    alasanKeberatanInputs[0].setAttribute("required", "required");
+                }
+            } else if (layananName.includes("pelanggaran pejabat")) {
+                showField(namapejabatFields, namaPejabatInput);
+                showField(pejabatFields, jabatanPejabatInput);
+                showField(penyalahgunaanField, penyalahgunaanInput);
+                if (lampiranBuktiBerkas) lampiranBuktiBerkas.style.display = "block";
+                if (lampiranDataDukung) lampiranDataDukung.style.display = "none";
+                if (rincianInformasiField) rincianInformasiField.style.display = "none";
+            } else if (layananName.includes("pelanggaran mitra")) {
+                showField(namamitraFields, namaMitraInput);
+                showField(mitraFields, jabatanMitraInput);
+                showField(penyalahgunaanField, penyalahgunaanInput);
+                if (lampiranBuktiBerkas) lampiranBuktiBerkas.style.display = "block";
+                if (lampiranDataDukung) lampiranDataDukung.style.display = "none";
+                if (rincianInformasiField) rincianInformasiField.style.display = "none";
+            }
+        });
+    });
 </script>
+
 
 </html>

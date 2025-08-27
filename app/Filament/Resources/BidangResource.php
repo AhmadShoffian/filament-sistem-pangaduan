@@ -19,6 +19,8 @@ class BidangResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $navigationGroup = 'Master Data';
+
     public static function form(Form $form): Form
     {
         return $form
@@ -65,7 +67,9 @@ class BidangResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->paginated([10, 25, 50]);
+
     }
 
     public static function getPages(): array

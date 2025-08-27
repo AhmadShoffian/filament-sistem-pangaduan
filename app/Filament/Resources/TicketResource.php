@@ -8,18 +8,29 @@ use App\Models\Ticket;
 use App\Models\Pemohon;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Exports\TicketsExport;
 use App\Models\LayananInformasi;
 use Filament\Resources\Resource;
+use Filament\Tables\Actions\ExportAction;
+use Maatwebsite\Excel\Facades\Excel;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Contracts\HasTable;
+use App\Filament\Exports\TicketExporter;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\CheckboxList;
+use Maatwebsite\Excel\Excel as ExcelWriter;
+use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use App\Filament\Resources\TicketResource\Pages;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TicketResource\RelationManagers;
+use App\Filament\Resources\TicketResource\RelationManagers\CommentsRelationManager;
+use Filament\Tables\Actions\ExportBulkAction;
 
 class TicketResource extends Resource
 {
@@ -78,7 +89,6 @@ class TicketResource extends Resource
                         fn(callable $get) =>
                         optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))->name === 'Pengajuan Keberatan'
                     ),
-
 
                 TextInput::make('nama_lengkap')
                     ->required()
@@ -213,23 +223,36 @@ class TicketResource extends Resource
             ]);
     }
 
+    public static function getRelations(): array
+    {
+        return [
+            CommentsRelationManager::class,
+        ];
+    }
+
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
                 TextColumn::make('nomor_ticket')
-                    ->label('Nomor Ticket'),
+                    ->label('Nomor Ticket')
+                    ->searchable(),
                 TextColumn::make('jenisLayanan.name')
-                    ->label('Jenis Layanan'),
+                    ->label('Jenis Layanan')
+                    ->searchable(),
                 TextColumn::make('nama_lengkap')
-                    ->label('Nama Lengkap'),
+                    ->label('Nama Lengkap')
+                    ->searchable(),
                 TextColumn::make('kategoriPemohon.name')
-                    ->label('Kategori Pemohon'),
+                    ->label('Kategori Pemohon')
+                    ->searchable(),
                 TextColumn::make('kategoriBidang.name')
-                    ->label('Kategori Bidang'),
+                    ->label('Kategori Bidang')
+                    ->searchable(),
                 TextColumn::make('rincian_informasi')
                     ->limit(50)
-                    ->label('Rincian Informasi'),
+                    ->label('Rincian Informasi')
+                    ->searchable(),
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn(string $state) => match ($state) {
@@ -241,7 +264,8 @@ class TicketResource extends Resource
                         'in_progress' => 'Dalam Proses',
                         'closed' => 'Ditutup',
                         default => 'Tidak Diketahui',
-                    }),
+                    })
+                    ->searchable(),
 
                 TextColumn::make('created_at')
                     ->dateTime()
@@ -251,16 +275,73 @@ class TicketResource extends Resource
                     ->label('Updated At'),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->label('Status')
+                    ->options([
+                        'in_progress' => 'Dalam Proses',
+                        'closed' => 'Ditutup',
+                    ]),
+                SelectFilter::make('master_layanan_informasi_id')
+                    ->label('Jenis Layanan')
+                    ->relationship('jenisLayanan', 'name'),
+                SelectFilter::make('master_kat_pemohon_id')
+                    ->label('Kategori Pemohon')
+                    ->relationship('kategoriPemohon', 'name'),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
+
+                Tables\Actions\Action::make('close')
+                    ->label('Close Ticket')
+                    ->icon('heroicon-o-lock-closed')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->visible(fn($record) => $record->status !== 'closed')
+                    ->action(function ($record) {
+                        $record->update([
+                            'status' => 'closed',
+                        ]);
+                    }),
             ])
+
+            // ->headerActions([
+            //     ExportAction::make()
+            //         ->exports([
+            //             ExcelExport::make()
+            //                 ->fromTable() // langsung ambil data dari tabel
+            //                 ->askForFilename() // bisa tanya nama file
+            //                 ->withFilename(fn() => 'tickets-' . now()->format('Y-m-d')) // default filename
+            //         ]),
+            // ])
+
+            // ->headerActions([
+            //     ExportAction::make('export')
+            //         ->label('Export Excel')
+            //         ->icon('heroicon-o-arrow-down-tray')
+            //         ->exports([
+            //             ExcelExport::make()
+            //                 ->fromTable() // ambil kolom & formatting dari Table (ikut filter & search)
+            //                 ->withWriterType(ExcelWriter::XLSX)
+            //                 ->withFilename(fn() => 'tickets-' . now()->format('Y-m-d_H-i')),
+            //             // ->only([...]) atau ->except([...]) kalau mau batasi kolom
+            //             // ->modifyQueryUsing(fn ($query) => $query->where('status', 'open'))
+            //         ]),
+            // ])
+            ->headerActions([
+                ExportAction::make()
+                    ->exporter(TicketExporter::class),
+            ])
+
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+                ExportBulkAction::make()->exporter(TicketExporter::class),
+            ])
+            ->emptyStateActions([
+                Tables\Actions\CreateAction::make(),
             ]);
     }
 
@@ -269,6 +350,8 @@ class TicketResource extends Resource
         return [
             'index' => Pages\ManageTickets::route('/'),
             'create' => Pages\CreateTicket::route('/create'),
+            'edit' => Pages\EditTicket::route('/{record}/edit'),
+            'view' => Pages\ViewTicket::route('/{record}'),
         ];
     }
 }
