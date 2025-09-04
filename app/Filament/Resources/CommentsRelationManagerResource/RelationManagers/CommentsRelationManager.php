@@ -2,14 +2,15 @@
 
 namespace App\Filament\Resources\TicketResource\RelationManagers;
 
-use App\Mail\AdminReplyMail;
-use App\Models\Ticket;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use App\Models\Ticket;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use App\Mail\AdminReplyMail;
+use App\Jobs\SendAdminReplyEmail;
 use Illuminate\Support\Facades\Mail;
+use Filament\Resources\RelationManagers\RelationManager;
 
 class CommentsRelationManager extends RelationManager
 {
@@ -51,14 +52,17 @@ class CommentsRelationManager extends RelationManager
                         return $data;
                     })
                     ->after(function ($record, $data) {
-                        // Kirim email setelah komentar tersimpan
-                        $ticket = $record->ticket; // Ambil relasi ticket
+                        $ticket = $record->ticket; 
+
                         if (!empty($ticket->email)) {
-                            Mail::to($ticket->email)->send(
-                                new AdminReplyMail($ticket, $data['message'])
+                            SendAdminReplyEmail::dispatch(
+                                $ticket,
+                                $data['message'],   
+                                $ticket->email      
                             );
                         }
-                    }),
+                    })
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

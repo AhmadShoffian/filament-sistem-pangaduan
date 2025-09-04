@@ -11,10 +11,13 @@ use Illuminate\Support\Str;
 use App\Mail\AdminReplyMail;
 use App\Models\KatKeberatan;
 use Illuminate\Http\Request;
-use App\Mail\TicketCreatedMail;
+
 use App\Models\LayananInformasi;
 use App\Mail\UserSendMessageMail;
+use App\Jobs\SendUserMessageEmail;
+use App\Jobs\SendTicketCreatedEmail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
@@ -30,17 +33,15 @@ class HomeController extends Controller
 
     public function store(Request $request)
     {
-
-
         $validated = $request->validate([
             'subject'           => 'required|exists:master_layanan_informasi,id',
-            'name'              => 'required|string|max:255',
-            'applicant'         => 'required|exists:master_kat_pemohon,id',
-            'identity'          => 'required|string|max:50',
-            'ifiles'            => 'required|mimes:jpg,jpeg,png|max:200',
+            'name'              => 'nullable|string|max:255',
+            'applicant'         => 'nullable|exists:master_kat_pemohon,id',
+            'identity'          => 'nullable|string|max:50',
+            'ifiles'            => 'nullable|mimes:jpg,jpeg,png|max:200',
             'email'             => 'required|email',
-            'handphone'         => 'required|string|max:15',
-            'address'           => 'required|string',
+            'phone'             => 'nullable|string|max:15',
+            'address'           => 'nullable|string',
             'rincian_informasi' => 'nullable|string',
             'category'          => 'nullable|exists:master_kat_bidang,id',
             'nama_pejabat'      => 'nullable|string|max:255',
@@ -50,6 +51,7 @@ class HomeController extends Controller
             'penyalahgunaan'    => 'nullable|string',
             'dfiles'            => 'nullable|mimes:jpg,jpeg,png,pdf,doc,docx|max:1024',
             'sfiles'            => 'nullable|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120',
+            'lapbhfile'         => 'nullable|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120',
             'keberatan'         => 'nullable|string',
             'purpose'           => 'nullable|string',
             'objection'         => 'nullable|array',
@@ -59,6 +61,23 @@ class HomeController extends Controller
         ]);
 
         // simpan file upload
+        // if ($request->hasFile('ifiles')) {
+        //     $lampiran_identitas = $request->file('ifiles')->store('lampiran_identitas', 'public');
+        // }
+
+        // if ($request->hasFile('dfiles')) {
+        //     $lampiran_dukung = $request->file('dfiles')->store('lampiran_data_dukung', 'public');
+        // }
+
+        // if ($request->hasFile('sfiles')) {
+        //     $lampiran_bukti_pejabat = $request->file('sfiles')->store('lampiran_bukti', 'public');
+        // }
+
+        // if ($request->hasFile('ifiles')) {
+        //     $lampiran_identitas = $request->file('ifiles')->store('lampiran_identitas', 'public');
+        //     $lampiran_identitas = Storage::url($lampiran_identitas);
+        // }
+
         if ($request->hasFile('ifiles')) {
             $lampiran_identitas = $request->file('ifiles')->store('lampiran_identitas', 'public');
         }
@@ -71,21 +90,27 @@ class HomeController extends Controller
             $lampiran_bukti_pejabat = $request->file('sfiles')->store('lampiran_bukti', 'public');
         }
 
+        if ($request->hasFile('lapbhfile')) {
+            $lampiran_apbh = $request->file('lapbhfile')->store('lampiran_apbh', 'public');
+        }
+
+
         $nomorTicket = str_pad(random_int(0, 999999999999), 12, '0', STR_PAD_LEFT);
 
         // buat ticket baru
         $ticket = Ticket::create([
             'nomor_ticket'                  => $nomorTicket,
-            'master_layanan_informasi_id'    => $validated['subject'],
-            'master_kat_pemohon_id'          => $validated['applicant'],
-            'nomor_identitas'                => $validated['identity'],
+            'master_layanan_informasi_id'    => $validated['subject'] ?? null,
+            'master_kat_pemohon_id'          => $validated['applicant'] ?? null,
+            'nomor_identitas'                => $validated['identity'] ?? null,
             'lampiran_identitas'             => $lampiran_identitas ?? null,
             'lampiran_dukung'                => $lampiran_dukung ?? null,
             'lampiran_bukti_pejabat'         => $lampiran_bukti_pejabat ?? null,
-            'nama_lengkap'                   => $validated['name'],
+            'lampiran_apbh'                  => $lampiran_apbh ?? null,
+            'nama_lengkap'                   => $validated['name'] ?? 'Anonim',
             'email'                          => $validated['email'],
-            'no_telepon'                     => $validated['handphone'],
-            'alamat'                         => $validated['address'],
+            'no_telepon'                     => $validated['phone'] ?? null,
+            'alamat'                         => $validated['address'] ?? null,
             'rincian_informasi'              => $validated['rincian_informasi'] ?? '',
             'master_kat_bidang_id'           => $validated['category'] ?? null,
             'nama_pejabat'                   => $validated['nama_pejabat'] ?? null,
@@ -102,7 +127,7 @@ class HomeController extends Controller
             $ticket->kategoriKeberatan()->attach($validated['objection']);
         }
 
-        Mail::to($ticket->email)->send(new TicketCreatedMail($ticket));
+        SendTicketCreatedEmail::dispatch($ticket, $ticket->email);
 
         return redirect()->back()->with('success', 'Data berhasil disimpan! Silakan cek notifikasi di email Anda.');
     }
@@ -129,7 +154,6 @@ class HomeController extends Controller
         return view('home.data_permohonan', ['data' => $result]);
     }
 
-
     // public function storeComment(Request $request, $id)
     // {
     //     $ticket = Ticket::findOrFail($id);
@@ -143,7 +167,6 @@ class HomeController extends Controller
     //         ? $request->file('attachment')->store('comments', 'public')
     //         : null;
 
-
     //     Comment::create([
     //         'ticket_id' => $ticket->id,
     //         'sender' => 'user',
@@ -156,41 +179,35 @@ class HomeController extends Controller
     // }
 
     public function storeComment(Request $request, $id)
-{
-    $ticket = Ticket::findOrFail($id);
+    {
+        $ticket = Ticket::findOrFail($id);
 
-    $request->validate([
-        'message' => 'required|string',
-        'attachment' => 'nullable|file|max:2048'
-    ]);
+        $request->validate([
+            'message' => 'required|string',
+            'attachment' => 'nullable|file|max:2048'
+        ]);
 
-    $path = $request->hasFile('attachment')
-        ? $request->file('attachment')->store('comments', 'public')
-        : null;
+        $path = $request->hasFile('attachment')
+            ? $request->file('attachment')->store('comments', 'public')
+            : null;
 
-    // Simpan komentar user
-    $comment = Comment::create([
-        'ticket_id' => $ticket->id,
-        'sender' => 'user',
-        'sender_name' => $ticket->nama_lengkap,
-        'message' => $request->message,
-        'attachment' => $path
-    ]);
+        // Simpan komentar user
+        $comment = Comment::create([
+            'ticket_id' => $ticket->id,
+            'sender' => 'user',
+            'sender_name' => $ticket->nama_lengkap,
+            'message' => $request->message,
+            'attachment' => $path
+        ]);
 
-    // Kirim email ke admin terkait
-    // Pastikan Ticket punya relasi ke admin (atau email admin statis)
-    if ($ticket->admin && !empty($ticket->admin->email)) {
-        Mail::to($ticket->admin->email)->send(
-            new UserSendMessageMail($ticket, $request->message)
-        );
-    } else {
-        // fallback jika mau kirim ke email admin tetap
-        Mail::to('admin@example.com')->send(
-            new UserSendMessageMail($ticket, $request->message)
-        );
+        if ($ticket->admin && !empty($ticket->admin->email)) {
+            SendUserMessageEmail::dispatch(
+                $ticket,
+                $request->message,
+                $ticket->admin->email
+            );
+        }
+
+        return back()->with('success', 'Komentar berhasil dikirim.');
     }
-
-    return back()->with('success', 'Komentar berhasil dikirim.');
-}
-
 }

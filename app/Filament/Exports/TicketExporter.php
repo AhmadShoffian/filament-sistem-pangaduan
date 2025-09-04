@@ -10,18 +10,28 @@ use Filament\Actions\Exports\Models\Export;
 class TicketExporter extends Exporter
 {
     protected static ?string $model = Ticket::class;
-    
+
     public static function getColumns(): array
     {
         return [
             ExportColumn::make('id')
                 ->label('ID'),
             ExportColumn::make('nomor_ticket'),
-            ExportColumn::make('master_kat_pemohon_id'),
-            ExportColumn::make('master_kat_bidang_id'),
-            ExportColumn::make('master_layanan_informasi_id'),
-            ExportColumn::make('master_kat_informasi_id'),
-            ExportColumn::make('master_kat_keberatan_id'),
+            ExportColumn::make('kategoriPemohon.name')
+                ->label('Kategori Pemohon'),
+
+            ExportColumn::make('kategoriBidang.name')
+                ->label('Kategori Bidang'),
+
+            ExportColumn::make('jenisLayanan.name')
+                ->label('Layanan Informasi'),
+
+            ExportColumn::make('kategoriInformasi.name')
+                ->label('Kategori Informasi'),
+
+            ExportColumn::make('kategoriKeberatan.name')
+                ->label('Kategori Keberatan'),
+
             ExportColumn::make('nama_lengkap'),
             ExportColumn::make('nomor_identitas'),
             ExportColumn::make('lampiran_identitas'),
@@ -42,12 +52,12 @@ class TicketExporter extends Exporter
             ExportColumn::make('lampiran_bukti_mitra'),
             ExportColumn::make('lampiran_dukung'),
             ExportColumn::make('status'),
-            ExportColumn::make('created_by'),
-            ExportColumn::make('updated_by'),
-            ExportColumn::make('deleted_by'),
-            ExportColumn::make('deleted_at'),
-            ExportColumn::make('created_at'),
-            ExportColumn::make('updated_at'),
+            // ExportColumn::make('created_by'),
+            // ExportColumn::make('updated_by'),
+            // ExportColumn::make('deleted_by'),
+            // ExportColumn::make('deleted_at'),
+            // ExportColumn::make('created_at'),
+            // ExportColumn::make('updated_at'),
         ];
     }
 

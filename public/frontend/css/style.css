@@ -2875,7 +2875,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .from-emerald-700 {
-    --tw-gradient-from: #047857 var(--tw-gradient-from-position);
+    --tw-gradient-from: #ae29f0 var(--tw-gradient-from-position) !important;
     --tw-gradient-to: rgba(4,120,87,0) var(--tw-gradient-to-position);
     --tw-gradient-stops: var(--tw-gradient-from),var(--tw-gradient-to)
 }
@@ -2982,7 +2982,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .to-emerald-900 {
-    --tw-gradient-to: #1FA2FF var(--tw-gradient-to-position);
+    --tw-gradient-to: #7776fe var(--tw-gradient-to-position) !important;
 }
 
 

@@ -21,14 +21,6 @@ Route::get('/home/lacak', [HomeController::class, 'permohonan'])->name('permohon
 Route::get('/home/permohonan', [HomeController::class, 'data'])->name('permohonan.data');
 Route::post('/ticket/{id}/comment', [HomeController::class, 'storeComment'])->name('ticket.comment');
 
-Route::get('/test-mail', function () {
-    Mail::raw('Tes kirim email dari Laravel.', function ($message) {
-        $message->to('dummy@example.com')
-                ->subject('Test Mailtrap');
-    });
-    return 'Email test dikirim';
-});
-
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

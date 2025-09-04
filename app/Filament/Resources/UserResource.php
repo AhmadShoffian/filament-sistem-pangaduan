@@ -23,10 +23,10 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    
+
     protected function getTitle(): string
     {
-        return 'Login-User'; 
+        return 'Login-User';
     }
 
     public static function form(Form $form): Form
@@ -41,11 +41,18 @@ class UserResource extends Resource
                     ->required()
                     ->unique(User::class, 'email', ignoreRecord: true),
 
+                // TextInput::make('password')
+                //     ->password()
+                //     ->required(fn(Forms\Get $get) => $get('id') === null)
+                //     ->dehydrateStateUsing(fn($state) => bcrypt($state))
+                //     ->maxLength(255),
                 TextInput::make('password')
                     ->password()
-                    ->required(fn(Forms\Get $get) => $get('id') === null)
-                    ->dehydrateStateUsing(fn($state) => bcrypt($state))
+                    ->required(fn(Forms\Get $get) => $get('id') === null) 
+                    ->dehydrateStateUsing(fn($state) => !empty($state) ? bcrypt($state) : null)
+                    ->dehydrated(fn($state) => filled($state))
                     ->maxLength(255),
+
                 Select::make('roles')
                     ->relationship('roles', 'name')
                     ->multiple()

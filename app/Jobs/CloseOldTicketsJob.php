@@ -15,7 +15,7 @@ class CloseOldTicketsJob
     public function handle(): void
     {
         // Ambil batas waktu 5 hari yang lalu
-        $cutoff = Carbon::now()->subDays(5);
+        $cutoff = Carbon::now()->subDays(3);
 
         // Update semua tiket yang belum closed dan dibuat lebih dari 5 hari yang lalu
         Ticket::where('status', '!=', 'closed')

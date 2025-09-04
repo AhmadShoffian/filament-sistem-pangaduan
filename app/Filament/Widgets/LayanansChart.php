@@ -28,7 +28,10 @@ class LayanansChart extends ChartWidget
                         '#10B981', 
                         '#F59E0B', 
                         '#EF4444', 
-                        '#8B5CF6', 
+                        '#8B5CF6',
+                        '#eef65cff',  
+                        '#f15cf6ff',  
+                        '#f65c92ff',  
                     ],
                 ],
             ],
@@ -36,7 +39,6 @@ class LayanansChart extends ChartWidget
         ];
     }
     
-
     protected function getType(): string
     {
         return 'doughnut';

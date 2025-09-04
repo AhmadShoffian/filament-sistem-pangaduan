@@ -17,8 +17,6 @@
     <title>Layanan Pengaduan</title>
     <meta name="keywords" content="layanan pengaduan, login, masuk, akses pengaduan" />
     <meta name="author" content="ISI Yogyakarta" />
-
-
     <!-- Favicon -->
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
@@ -109,6 +107,115 @@
         .subscribe-section .subscribe-form button:hover {
             background-position: right center;
         }
+
+        .circles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .circles li {
+            position: absolute;
+            display: block;
+            list-style: none;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            animation: animate 25s linear infinite;
+            bottom: -150px;
+        }
+
+        .circles li:nth-child(1) {
+            left: 25%;
+            width: 80px;
+            height: 80px;
+            animation-delay: 0s;
+        }
+
+        .circles li:nth-child(2) {
+            left: 10%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 2s;
+            animation-duration: 12s;
+        }
+
+        .circles li:nth-child(3) {
+            left: 70%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 4s;
+        }
+
+        .circles li:nth-child(4) {
+            left: 40%;
+            width: 60px;
+            height: 60px;
+            animation-delay: 0s;
+            animation-duration: 18s;
+        }
+
+        .circles li:nth-child(5) {
+            left: 65%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 0s;
+        }
+
+        .circles li:nth-child(6) {
+            left: 75%;
+            width: 110px;
+            height: 110px;
+            animation-delay: 3s;
+        }
+
+        .circles li:nth-child(7) {
+            left: 35%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 7s;
+        }
+
+        .circles li:nth-child(8) {
+            left: 50%;
+            width: 25px;
+            height: 25px;
+            animation-delay: 15s;
+            animation-duration: 45s;
+        }
+
+        .circles li:nth-child(9) {
+            left: 20%;
+            width: 15px;
+            height: 15px;
+            animation-delay: 2s;
+            animation-duration: 35s;
+        }
+
+        .circles li:nth-child(10) {
+            left: 85%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 0s;
+            animation-duration: 11s;
+        }
+
+        @keyframes animate {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+                border-radius: 0;
+            }
+
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+                border-radius: 50%;
+            }
+        }
     </style>
 </head>
 
@@ -127,8 +234,26 @@
     <div class="flex h-screen overflow-hidden font-sans flex flex-col md:flex-row text-gray-900 antialiased">
         <!-- LEFT SIDE (tidak scroll) -->
         <div
-            class="hidden md:flex md:w-1/2 bg-gradient-to-br from-emerald-700 to-emerald-900 text-white flex-col relative overflow-hidden">
-            <div class="absolute inset-0 bg-pattern opacity-10"></div>
+            class="hidden md:flex md:w-1/2 relative text-white flex-col overflow-hidden bg-gradient-to-br from-emerald-700 to-emerald-900">
+
+            <!-- Background pattern -->
+            <div class="absolute inset-0 bg-pattern opacity-10 z-0"></div>
+
+            <!-- Background floating circles -->
+            <ul class="circles z-0">
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+
+            <!-- Content -->
             <div class="w-full h-full flex flex-col justify-between relative z-10 p-8 lg:p-12 h-screen overflow-hidden">
                 <!-- Top Area -->
                 <div class="flex items-center">
@@ -140,35 +265,32 @@
                     </div>
                 </div>
 
-                <!-- Middle Area with Image -->
+                <!-- Middle Area -->
                 <div class="flex-grow flex flex-col justify-center py-4">
                     <h2 class="text-3xl font-bold mb-2">Selamat Datang di Layanan Informasi Publik</h2>
-                    <p class="text-emerald-50 mb-4">Anda busa menggunakan formulir disamping untuk membuat permohonan
-                        informasi, pengajuan keberatan, pengaduan pungli & gratifikasi, dan penyalagunaan wewenang dan
-                        jabatan. <br><br>
-                        Jika anda sudah membuat permohonan/pengaduan, silahkan klik tombol dibawah ini untuk melacak
-                        permohonan/pengaduan.
+                    <p class="text-emerald-50 mb-4">Anda bisa menggunakan formulir disamping untuk membuat permohonan
+                        informasi,
+                        pengajuan keberatan, pengaduan pungli & gratifikasi, dan penyalahgunaan wewenang dan jabatan.
+                        <br><br>
+                        Jika anda sudah membuat permohonan/pengaduan, silahkan klik tombol dibawah ini untuk melacak.
                     </p>
                     <div class="flex space-x-2">
-                        <!-- Button: Lacak Permohonan (Aktif) -->
+                        <!-- Button: Lacak -->
                         <button type="button" class="btn-lacak"
                             onclick="window.location.href='{{ route('permohonan.lacak') }}'">
                             Lacak Permohonan
                         </button>
 
-
-
-
-                        <!-- Button: Beranda (Nonaktif) -->
-                        <button type="button"
-                            class="flex items-center px-5 py-2.5 text-sm font-medium text-gray-700 bg-white rounded-full shadow border hover:bg-gray-100 transition-colors">
+                        <!-- Button: Beranda -->
+                        <a href="https://pandu.isi.ac.id/"
+                            class="flex items-center px-5 py-2.5 text-sm font-medium text-gray-700 bg-white 
+                    rounded-full shadow border hover:bg-gray-100 transition-colors">
                             <svg class="w-4 h-4 mr-2 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M10 2L2 8h2v8a1 1 0 001 1h4V12h2v5h4a1 1 0 001-1V8h2L10 2z" />
                             </svg>
                             Beranda
-                        </button>
+                        </a>
                     </div>
-
                     <div class="subscribe-section mt-5">
                         <form action="#" method="GET" class="subscribe-form wow fadeInRight" data-wow-delay=".4s"
                             style="color:#000000">
@@ -183,6 +305,7 @@
                 <div class="text-sm text-emerald-50">&copy; 2025 ISI Yogyakarta</div>
             </div>
         </div>
+
 
         <!-- <div class="h-full w-2/3 bg-white flex items-center justify-center p-6 sm:p-6 md:p-8 overflow-y-auto"> -->
         <div class="h-full md:w-1/2 bg-white flex items-center justify-center p-4 sm:p-6 md:p-8 overflow-y-auto">
@@ -199,7 +322,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Main Content -->
                 <div>
                     <!-- Modern Welcome Header -->
@@ -220,7 +342,6 @@
                                     </svg>
                                     <span>Sistem Pelayanan Pengaduan</span>
                                 </div>
-
                                 <!-- Responsive additions for larger screens -->
                                 <div class="hidden sm:block bg-gray-200 h-px flex-grow mx-2"></div>
                                 <div class="hidden sm:flex gap-1 text-xs text-gray-500">
@@ -233,7 +354,6 @@
                                     <span>Layanan Pengaduan</span>
                                 </div>
                             </div>
-
                             <h2
                                 class="text-3xl font-bold bg-gradient-to-r from-emerald-700 to-emerald-500 bg-clip-text text-transparent">
                                 Selamat Datang!</h2>
@@ -248,10 +368,8 @@
                             </p>
                         </div>
                     </div><br>
-
                     <!-- Session Status (empty div for spacing matching Laravel app) -->
                     <div class="mb-4"></div>
-
                     @if (session('success'))
                         <div id="alert-success"
                             class="mb-4 p-4 rounded-md bg-green-100 text-green-800 border border-green-300">
@@ -264,14 +382,11 @@
                                 if (alert) {
                                     alert.style.transition = 'opacity 0.5s ease';
                                     alert.style.opacity = '0';
-                                    setTimeout(() => alert.remove(), 500); 
+                                    setTimeout(() => alert.remove(), 500);
                                 }
-                            }, 3000); 
+                            }, 3000);
                         </script>
                     @endif
-
-                    
-
 
                     <form action="{{ route('home.store') }}" method="POST" class="space-y-5"
                         enctype="multipart/form-data">
@@ -280,7 +395,7 @@
                             <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">
                                 <b>Jenis Layanan Informasi</b> <span class="text-red-500">*</span>
                             </label>
-                            <select name="subject" id="subject" 
+                            <select name="subject" id="subject" required
                                 class="block w-full px-4 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white">
                                 <option value="">Pilih jenis layanan</option>
                                 @foreach ($jenisLayanan as $layanan)
@@ -299,9 +414,9 @@
 
                             <div>
                                 <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Nama Lengkap (Tanpa Gelar) <span class="text-red-500">*</span>
+                                    Nama Lengkap (Tanpa Gelar)
                                 </label>
-                                <input type="text" name="name" id="name" required
+                                <input type="text" name="name" id="name"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
                                 <div class="text-red-500 text-sm mt-1 hidden" id="name-error">
 
@@ -310,9 +425,9 @@
 
                             <div>
                                 <label for="applicant" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Kategori Pemohon <span class="text-red-500">*</span>
+                                    Kategori Pemohon
                                 </label>
-                                <select name="applicant" id="applicant" required
+                                <select name="applicant" id="applicant"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                                     <option value="">Pilih kategori</option>
                                     @foreach ($katPemohon as $pemohon)
@@ -329,12 +444,12 @@
                         </div>
 
                         <div class="mb-4">
-                            <label class="block text-gray-700 font-medium mb-2">
-                                Nomor Identitas (KTP/SIM/Paspor) <span class="text-red-500">*</span>
+                            <label for="identity" class="block text-gray-700 font-medium mb-2">
+                                Nomor Identitas (KTP/SIM/Paspor)
                             </label>
-                            <input type="number" name="identity"
+                            <input type="number" name="identity" id="identity"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none"
-                                required pattern="\d*">
+                                pattern="\d*">
                             <p class="text-red-500 text-sm mt-1 hidden" id="identity-error">Nomor identitas wajib
                                 diisi.
                             </p>
@@ -342,21 +457,35 @@
 
                         <div class="mb-4">
                             <label for="ifiles" class="block text-gray-700 font-medium mb-2">
-                                Lampiran KTP/SIM/PASPOR <span class="text-red-500">*</span>
+                                Lampiran KTP/SIM/PASPOR
                             </label>
-                            <input id="ifiles" name="ifiles" type="file" required accept=".jpg,.jpeg,.png"
+                            <input id="ifiles" name="ifiles" type="file" accept=".jpg,.jpeg,.png"
                                 class="block w-full text-sm text-gray-700 border border-gray-300 rounded-md shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
                             <p class="text-red-500 text-sm mt-1 hidden" id="ifiles-error">Lampiran wajib diunggah.</p>
                             <small class="text-gray-500 block mt-1">File berekstensi jpeg, png, jpg dengan ukuran
                                 maksimal 200kb</small>
                         </div>
 
+                        <div class="mb-4" >
+                            <label for="lapbhfile" class="block text-gray-700 font-medium mb-2">
+                                Lampiran Akta Pendirian Badan Hukum <span class="text-red-500">*</span>
+                            </label>
+                            <input id="lapbhfile" name="lapbhfile" type="file"
+                                accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                                class="block w-full text-sm text-gray-700 border border-gray-300 rounded-md shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
+                            <p class="text-red-500 text-sm mt-1 hidden" id="lapbhfile-error">Lampiran wajib diunggah.
+                            </p>
+                            <small class="text-gray-500 block mt-1">File berekstensi jpeg, png, jpg, pdf, docx dengan
+                                ukuran
+                                maksimal 200kb</small>
+                        </div>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
                                 <label for="email" class="block text-gray-700 font-medium mb-2">
-                                    Email <span class="text-red-500">*</span>
+                                    Email
                                 </label>
-                                <input id="email" type="email" name="email" required
+                                <input id="email" type="email" name="email"
                                     pattern="[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
                                 <p class="text-red-500 text-sm mt-1 hidden" id="email-error">Email tidak valid.</p>
@@ -364,10 +493,9 @@
 
                             <div>
                                 <label for="phone" class="block text-gray-700 font-medium mb-2">
-                                    Handphone <span class="text-red-500">*</span>
+                                    Handphone
                                 </label>
-                                <input id="phone" type="tel" name="handphone" required
-                                    placeholder="082121346578"
+                                <input id="phone" type="tel" name="phone" placeholder="082121346578"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
                                 <p class="text-red-500 text-sm mt-1 hidden" id="phone-error">Nomor handphone wajib
                                     diisi.</p>
@@ -376,18 +504,18 @@
 
                         <div class="mb-6">
                             <label for="address" class="block text-gray-700 font-medium mb-2">
-                                Alamat <span class="text-red-500">*</span>
+                                Alamat
                             </label>
-                            <input id="address" type="text" name="address" required value=""
+                            <input id="address" type="text" name="address" value=""
                                 class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
                             <p class="text-red-500 text-sm mt-1 hidden" id="address-error">Alamat wajib diisi.</p>
                         </div>
 
                         <div class="mb-6">
                             <label for="rincian_informasi" class="block text-gray-700 font-medium mb-2">
-                                Rincian Informasi <span class="text-red-500">*</span>
+                                Rincian Informasi
                             </label>
-                            <textarea name="rincian_informasi" id="rincian_informasi" rows="4" 
+                            <textarea name="rincian_informasi" id="rincian_informasi" rows="4"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-y"></textarea>
                             <p class="text-red-500 text-sm mt-1 hidden" id="rincian_informasi-error">Tujuan wajib
                                 diisi.</p>
@@ -395,9 +523,9 @@
 
                         <div class="mb-6">
                             <label for="category" class="block text-gray-700 font-medium mb-2">
-                                Kategori Bidang <span class="text-red-500">*</span>
+                                Kategori Bidang
                             </label>
-                            <select id="category" name="category" required
+                            <select id="category" name="category"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
                                 <option value="">Pilih kategori</option>
                                 @foreach ($katBidang as $bidang)
@@ -414,7 +542,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
                                 <label for="nama_pejabat" class="block text-gray-700 font-medium mb-2">
-                                    Nama Pejabat <span class="text-red-500">*</span>
+                                    Nama Pejabat
                                 </label>
                                 <input id="nama_pejabat" type="text" name="nama_pejabat"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
@@ -424,7 +552,7 @@
 
                             <div>
                                 <label for="jabatan" class="block text-gray-700 font-medium mb-2">
-                                    Jabatan <span class="text-red-500">*</span>
+                                    Jabatan
                                 </label>
                                 <input id="jabatan" type="text" name="jabatan"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
@@ -436,7 +564,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
                                 <label for="nama_mitra" class="block text-gray-700 font-medium mb-2">
-                                    Nama Mitra <span class="text-red-500">*</span>
+                                    Nama Mitra
                                 </label>
                                 <input id="nama_mitra" type="text" name="nama_mitra"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
@@ -446,7 +574,7 @@
 
                             <div>
                                 <label for="jabatan_mitra" class="block text-gray-700 font-medium mb-2">
-                                    Jabatan <span class="text-red-500">*</span>
+                                    Jabatan
                                 </label>
                                 <input id="jabatan_mitra" type="text" name="jabatan_mitra"
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
@@ -457,7 +585,7 @@
 
                         <div class="mb-6" id="field-penyalahgunaan">
                             <label for="penyalahgunaan" class="block text-gray-700 font-medium mb-2">
-                                Penyalahgunaan yang dilakukan <span class="text-red-500">*</span>
+                                Penyalahgunaan yang dilakukan
                             </label>
                             <textarea name="penyalahgunaan" id="penyalahgunaan" rows="4"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-y"></textarea>
@@ -467,12 +595,11 @@
 
                         <div class="mb-4">
                             <label for="dfiles" class="block text-gray-700 font-medium mb-2">
-                                Lampiran Data Dukung (opsional)
+                                Lampiran Data Dukung
                             </label>
                             <input id="dfiles" name="dfiles" type="file"
                                 accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
                                 class="block w-full text-sm text-gray-700 border border-gray-300 rounded-md shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
-                            {{-- <p class="text-red-500 text-sm mt-1 hidden" id="ifiles-error">Lampiran wajib diunggah.</p> --}}
                             <small class="text-gray-500 block mt-1">File berekstensi <strong>.doc, .docx, .pdf, .jpeg,
                                     .png, .jpg</strong> dengan ukuran
                                 maksimal <strong>1Mb</strong></small>
@@ -485,7 +612,6 @@
                             <input id="sfiles" name="sfiles" type="file"
                                 accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
                                 class="block w-full text-sm text-gray-700 border border-gray-300 rounded-md shadow-sm cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
-                            {{-- <p class="text-red-500 text-sm mt-1 hidden" id="ifiles-error">Lampiran wajib diunggah.</p> --}}
                             <small class="text-gray-500 block mt-1">File berekstensi <strong>.doc, .docx, .pdf, .jpeg,
                                     .png, .jpg</strong> dengan ukuran
                                 maksimal <strong>1Mb</strong></small>
@@ -493,24 +619,22 @@
 
                         <div class="mb-6">
                             <label for="keberatan" class="block text-gray-700 font-medium mb-2">
-                                Tujuan Mengajukan Keberatan <span class="text-red-500">*</span>
+                                Tujuan Mengajukan Keberatan
                             </label>
                             <textarea name="keberatan" id="keberatan" rows="4"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-y"></textarea>
                             <p class="text-red-500 text-sm mt-1 hidden" id="keberatan-error">Tujuan wajib diisi.</p>
                         </div>
-                        <div class="mb-6">
-                            <label for="purpose" class="block text-gray-700 font-medium mb-2">
-                                Tujuan Permohonan Informasi <span class="text-red-500">*</span>
-                            </label>
-                            <textarea name="purpose" id="purpose" rows="4"
+                        <div class="mb-6"> <label for="purpose" class="block text-gray-700 font-medium mb-2">
+                                Tujuan Permohonan Informasi <span class="text-red-500">*</span></label>
+                            <textarea name="purpose" id="purpose" required rows="4"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-y"></textarea>
                             <p class="text-red-500 text-sm mt-1 hidden" id="purpose-error">Tujuan wajib diisi.</p>
                         </div>
 
                         <div class="mb-6">
                             <label class="block text-gray-700 font-medium mb-2">
-                                Alasan mengajukan keberatan <span class="text-red-500">*</span>
+                                Alasan mengajukan keberatan
                             </label>
 
                             <div class="space-y-2">
@@ -530,7 +654,7 @@
 
                         <div class="mb-6 info">
                             <label class="block text-gray-700 font-semibold mb-2 require">
-                                Cara memperoleh informasi
+                                Cara memperoleh informasi <span class="text-red-500">*</span>
                             </label>
 
                             <select name="getinfo"
@@ -578,153 +702,12 @@
 
 </body>
 
-{{-- <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const subjectSelect = document.getElementById("subject");
-
-        // Mapping ID layanan dari database → action di JS
-        const layananMapping = @json($jenisLayanan->pluck('name', 'id'));
-
-        const tujuanInfoField = document.getElementById("purpose").closest(".mb-6");
-        const getInfoField = document.querySelector(".info");
-
-        const tujuanKeberatanField = document.getElementById("keberatan").closest(".mb-6");
-        // const alasanKeberatanField = document.getElementById("objection-error").closest(".mb-6");
-        const alasanKeberatanField = document.querySelector("#objection-error").parentElement;
-
-
-        const namapejabatFields = document.getElementById("nama_pejabat").closest(".mb-6");
-        const pejabatFields = document.getElementById("jabatan").closest(".mb-6");
-        const namamitraFields = document.getElementById("nama_mitra").closest(".mb-6");
-        const mitraFields = document.getElementById("jabatan_mitra").closest(".mb-6");
-        const penyalahgunaanField = document.getElementById("penyalahgunaan").closest(".mb-6");
-
-        const lampiranDataDukung = document.getElementById("dfiles").closest(".mb-4");
-        const lampiranBuktiBerkas = document.getElementById("sfiles").closest(".mb-4");
-
-        const rincianInformasiField = document.getElementById("rincian_informasi").closest(".mb-6");
-
-        function hideAll() {
-            tujuanInfoField.style.display = "none";
-            getInfoField.style.display = "none";
-            tujuanKeberatanField.style.display = "none";
-            alasanKeberatanField.style.display = "none";
-            namapejabatFields.style.display = "none";
-            pejabatFields.style.display = "none";
-            namamitraFields.style.display = "none";
-            mitraFields.style.display = "none";
-            penyalahgunaanField.style.display = "none";
-            lampiranDataDukung.style.display = "";
-            lampiranBuktiBerkas.style.display = "none";
-            rincianInformasiField.style.display = "";
-        }
-
-        hideAll();
-
-        subjectSelect.addEventListener("change", function() {
-            hideAll();
-            const selectedId = this.value;
-            const layananName = layananMapping[selectedId];
-
-            if (layananName?.toLowerCase() === "permohonan informasi") {
-                tujuanInfoField.style.display = "";
-                getInfoField.style.display = "";
-            } else if (layananName?.includes("Pengajuan Keberatan")) {
-                tujuanKeberatanField.style.display = "";
-                alasanKeberatanField.style.display = "";
-            } else if (layananName?.includes("Pelanggaran Pejabat")) {
-                namapejabatFields.style.display = "";
-                pejabatFields.style.display = "";
-                penyalahgunaanField.style.display = "";
-                lampiranBuktiBerkas.style.display = "";
-                lampiranDataDukung.style.display = "none";
-                rincianInformasiField.style.display = "none";
-            } else if (layananName?.includes("Pelanggaran Mitra")) {
-                namamitraFields.style.display = "";
-                mitraFields.style.display = "";
-                penyalahgunaanField.style.display = "";
-                lampiranBuktiBerkas.style.display = "";
-                lampiranDataDukung.style.display = "none";
-                rincianInformasiField.style.display = "none";
-            }
-        });
-    });
-</script> --}}
-
-{{-- <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const subjectSelect = document.getElementById("subject");
-        if (!subjectSelect) return; 
-
-        const layananMapping = @json($jenisLayanan->pluck('name', 'id'));
-
-        const safeClosest = (el, selector) => el ? el.closest(selector) : null;
-
-        const tujuanInfoField = safeClosest(document.getElementById("purpose"), ".mb-6");
-        const getInfoField = document.querySelector(".info");
-
-        const tujuanKeberatanField = safeClosest(document.getElementById("keberatan"), ".mb-6");
-        const alasanKeberatanField = document.querySelector("#objection-error")?.parentElement || null;
-
-        const namapejabatFields = safeClosest(document.getElementById("nama_pejabat"), ".mb-6");
-        const pejabatFields = safeClosest(document.getElementById("jabatan"), ".mb-6");
-        const namamitraFields = safeClosest(document.getElementById("nama_mitra"), ".mb-6");
-        const mitraFields = safeClosest(document.getElementById("jabatan_mitra"), ".mb-6");
-        const penyalahgunaanField = safeClosest(document.getElementById("penyalahgunaan"), ".mb-6");
-
-        const lampiranDataDukung = safeClosest(document.getElementById("dfiles"), ".mb-4");
-        const lampiranBuktiBerkas = safeClosest(document.getElementById("sfiles"), ".mb-4");
-
-        const rincianInformasiField = safeClosest(document.getElementById("rincian_informasi"), ".mb-6");
-
-        function hideAll() {
-            [tujuanInfoField, getInfoField, tujuanKeberatanField, alasanKeberatanField,
-                namapejabatFields, pejabatFields, namamitraFields, mitraFields,
-                penyalahgunaanField, lampiranDataDukung, lampiranBuktiBerkas, rincianInformasiField
-            ]
-            .forEach(el => {
-                if (el) el.style.display = "none";
-            });
-
-            if (lampiranDataDukung) lampiranDataDukung.style.display = "block";
-            if (rincianInformasiField) rincianInformasiField.style.display = "block";
-        }
-
-        hideAll();
-
-        subjectSelect.addEventListener("change", function() {
-            hideAll();
-            const selectedId = this.value;
-            const layananName = layananMapping[selectedId] || "";
-
-            if (layananName.toLowerCase() === "permohonan informasi") {
-                if (tujuanInfoField) tujuanInfoField.style.display = "block";
-                if (getInfoField) getInfoField.style.display = "block";
-            } else if (layananName.includes("Pengajuan Keberatan")) {
-                if (tujuanKeberatanField) tujuanKeberatanField.style.display = "block";
-                if (alasanKeberatanField) alasanKeberatanField.style.display = "block";
-            } else if (layananName.includes("Pelanggaran Pejabat")) {
-                if (namapejabatFields) namapejabatFields.style.display = "block";
-                if (pejabatFields) pejabatFields.style.display = "block";
-                if (penyalahgunaanField) penyalahgunaanField.style.display = "block";
-                if (lampiranBuktiBerkas) lampiranBuktiBerkas.style.display = "block";
-                if (lampiranDataDukung) lampiranDataDukung.style.display = "none";
-                if (rincianInformasiField) rincianInformasiField.style.display = "none";
-            } else if (layananName.includes("Pelanggaran Mitra")) {
-                if (namamitraFields) namamitraFields.style.display = "block";
-                if (mitraFields) mitraFields.style.display = "block";
-                if (penyalahgunaanField) penyalahgunaanField.style.display = "block";
-                if (lampiranBuktiBerkas) lampiranBuktiBerkas.style.display = "block";
-                if (lampiranDataDukung) lampiranDataDukung.style.display = "none";
-                if (rincianInformasiField) rincianInformasiField.style.display = "none";
-            }
-        });
-    });
-</script> --}}
-
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const subjectSelect = document.getElementById("subject");
+        const applicantSelect = document.getElementById("applicant");
+        const pungliRequired = ["email", "rincian_informasi", "dfiles"];
+        const requiredLabels = document.querySelectorAll("label span.text-red-500");
         if (!subjectSelect) return;
 
         const layananMapping = @json($jenisLayanan->pluck('name', 'id'));
@@ -759,6 +742,8 @@
 
         const lampiranDataDukung = safeClosest(document.getElementById("dfiles"), ".mb-4");
         const lampiranBuktiBerkas = safeClosest(document.getElementById("sfiles"), ".mb-4");
+        const lampiranAktaPendirianHukum = safeClosest(document.getElementById("lapbhfile"), ".mb-4");
+        const categoryField = document.getElementById("category")?.closest(".mb-6");
 
         const rincianInformasiField = safeClosest(document.getElementById("rincian_informasi"), ".mb-6");
 
@@ -772,6 +757,32 @@
             if (wrapper) wrapper.style.display = "none";
             if (input) input.removeAttribute("required");
         }
+
+        function checkApplicantCategory() {
+            if (!applicantSelect) return;
+            const selectedOption = applicantSelect.options[applicantSelect.selectedIndex];
+            const name = selectedOption?.text.trim().toLowerCase() || "";
+
+            console.log("Kategori dipilih:", name);
+
+            const needsAkta = ["lsm/ngo", "instansi pemerintah", "lembaga pemerintah"];
+
+            if (needsAkta.includes(name)) {
+                if (lampiranAktaPendirianHukum) {
+                    lampiranAktaPendirianHukum.style.display = "block";
+                    lampiranAktaPendirianHukum.querySelector("input")?.setAttribute("required", "required");
+                }
+            } else {
+                if (lampiranAktaPendirianHukum) {
+                    lampiranAktaPendirianHukum.style.display = "none";
+                    lampiranAktaPendirianHukum.querySelector("input")?.removeAttribute("required");
+                }
+            }
+        }
+
+        // jalankan pertama kali + saat berubah
+        checkApplicantCategory();
+        applicantSelect?.addEventListener("change", checkApplicantCategory);
 
         function hideAll() {
             hideField(tujuanInfoField, tujuanInfoInput);
@@ -794,12 +805,51 @@
             if (lampiranDataDukung) lampiranDataDukung.style.display = "block";
             if (lampiranBuktiBerkas) lampiranBuktiBerkas.style.display = "none";
             if (rincianInformasiField) rincianInformasiField.style.display = "block";
+            if (lampiranAktaPendirianHukum) lampiranAktaPendirianHukum.style.display = "none";
         }
 
         hideAll();
 
+        // helper toggle bintang merah
+        function toggleRequiredLabel(input, required = true) {
+            if (!input) return;
+            const label = input.closest("div")?.querySelector("label");
+            if (!label) return;
+
+            let star = label.querySelector("span.text-red-500");
+            if (required) {
+                input.setAttribute("required", "required");
+                if (!star) {
+                    const span = document.createElement("span");
+                    span.className = "text-red-500";
+                    span.innerText = "*";
+                    label.appendChild(document.createTextNode(" "));
+                    label.appendChild(span);
+                }
+            } else {
+                input.removeAttribute("required");
+                if (star) star.remove();
+            }
+        }
+
+        function clearAllRequired() {
+            const fields = [
+                "name", "email", "applicant", "identity", "ifiles", "phone", "address",
+                "category", "dfiles", "sfiles", "lapbhfile", "nama_pejabat", "jabatan",
+                "nama_mitra", "jabatan_mitra", "penyalahgunaan", "rincian_informasi",
+                "purpose", "keberatan"
+            ];
+
+            fields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) toggleRequiredLabel(el, false);
+            });
+        }
+
+
         subjectSelect.addEventListener("change", function() {
             hideAll();
+            clearAllRequired();
             const selectedId = this.value;
             const layananName = (layananMapping[selectedId] || "").toLowerCase();
 
@@ -809,6 +859,50 @@
                     getInfoWrapper.style.display = "block";
                     if (getInfoInput) getInfoInput.setAttribute("required", "required");
                 }
+
+                toggleRequiredLabel(document.getElementById("rincian_informasi"), true);
+                toggleRequiredLabel(document.getElementById("name"), true);
+                toggleRequiredLabel(document.getElementById("email"), true);
+                toggleRequiredLabel(document.getElementById("applicant"), true);
+                toggleRequiredLabel(document.getElementById("identity"), true);
+                toggleRequiredLabel(document.getElementById("ifiles"), true);
+                toggleRequiredLabel(document.getElementById("phone"), true);
+                toggleRequiredLabel(document.getElementById("address"), true);
+                toggleRequiredLabel(document.getElementById("category"), true);
+                toggleRequiredLabel(document.getElementById("dfiles"), true);
+                toggleRequiredLabel(document.getElementById("purpose"), true);
+
+                if (rincianInformasiField) {
+                    rincianInformasiField.style.display = "block";
+                    rincianInformasiField.querySelector("textarea")?.setAttribute("required",
+                        "required");
+                }
+
+                // Field khusus permohonan informasi
+                if (tujuanInfoField) {
+                    tujuanInfoField.style.display = "block";
+                    tujuanInfoInput?.setAttribute("required", "required");
+                }
+
+                if (getInfoWrapper) {
+                    getInfoWrapper.style.display = "block";
+                    getInfoInput?.setAttribute("required", "required");
+                }
+
+                // Nonaktifkan field lain
+                hideField(tujuanKeberatanField, tujuanKeberatanInput);
+                hideField(namapejabatFields, namaPejabatInput);
+                hideField(pejabatFields, jabatanPejabatInput);
+                hideField(namamitraFields, namaMitraInput);
+                hideField(mitraFields, jabatanMitraInput);
+                if (penyalahgunaanField) hideField(penyalahgunaanField, penyalahgunaanInput);
+                if (lampiranBuktiBerkas) hideField(lampiranBuktiBerkas, lampiranBuktiBerkas
+                    .querySelector("input"));
+                if (lampiranAktaPendirianHukum) hideField(lampiranAktaPendirianHukum,
+                    lampiranAktaPendirianHukum.querySelector("input"));
+                if (alasanKeberatanField) alasanKeberatanField.style.display = "none";
+                alasanKeberatanInputs.forEach(cb => cb.required = false);
+                checkApplicantCategory();
             } else if (layananName.includes("pengajuan keberatan")) {
                 showField(tujuanKeberatanField, tujuanKeberatanInput);
                 if (alasanKeberatanField) alasanKeberatanField.style.display = "block";
@@ -816,6 +910,27 @@
                     // minimal 1 required → kasih ke checkbox pertama
                     alasanKeberatanInputs[0].setAttribute("required", "required");
                 }
+
+                // document.getElementById("name")?.setAttribute("required", "required");
+                // document.getElementById("email")?.setAttribute("required", "required");
+                // document.getElementById("applicant")?.setAttribute("required", "required");
+                // document.getElementById("identity")?.setAttribute("required", "required");
+                // document.getElementById("ifiles")?.setAttribute("required", "required");
+                // document.getElementById("handphone")?.setAttribute("required", "required");
+                // document.getElementById("address")?.setAttribute("required", "required");
+                // document.getElementById("category")?.setAttribute("required", "required");
+                // document.getElementById("dfiles")?.setAttribute("required", "required");
+
+                toggleRequiredLabel(document.getElementById("name"), true);
+                toggleRequiredLabel(document.getElementById("email"), true);
+                toggleRequiredLabel(document.getElementById("applicant"), true);
+                toggleRequiredLabel(document.getElementById("identity"), true);
+                toggleRequiredLabel(document.getElementById("ifile"), true);
+                toggleRequiredLabel(document.getElementById("phone"), true);
+                toggleRequiredLabel(document.getElementById("address"), true);
+                toggleRequiredLabel(document.getElementById("category"), true);
+                toggleRequiredLabel(document.getElementById("dfiles"), true);
+
             } else if (layananName.includes("pelanggaran pejabat")) {
                 showField(namapejabatFields, namaPejabatInput);
                 showField(pejabatFields, jabatanPejabatInput);
@@ -830,8 +945,16 @@
                 if (lampiranBuktiBerkas) lampiranBuktiBerkas.style.display = "block";
                 if (lampiranDataDukung) lampiranDataDukung.style.display = "none";
                 if (rincianInformasiField) rincianInformasiField.style.display = "none";
+            } else if (layananName.includes("pengaduan pungli & gratifikasi")) {
+                toggleRequiredLabel(document.getElementById("email"), true);
+                toggleRequiredLabel(document.getElementById("rincian_informasi"), true);
+                toggleRequiredLabel(document.getElementById("category"), true);
+                toggleRequiredLabel(document.getElementById("dfiles"), true);
             }
+
+
         });
+
     });
 </script>
 

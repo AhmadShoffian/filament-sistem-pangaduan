@@ -74,9 +74,58 @@
                                         class="text-gray-400 text-sm">{{ $comment->created_at->diffForHumans() }}</span>
                                 </div>
                                 @if ($comment->attachment)
+                                    @php
+                                        $ext = strtolower(pathinfo($comment->attachment, PATHINFO_EXTENSION));
+                                    @endphp
+
                                     <a href="{{ Storage::url($comment->attachment) }}" download
-                                        class="text-blue-500 hover:text-blue-700" title="Unduh Lampiran">📎</a>
+                                        class="flex items-center gap-1 text-blue-500 hover:text-blue-700 text-sm"
+                                        title="Unduh Lampiran">
+
+                                        {{-- PDF --}}
+                                        @if ($ext === 'pdf')
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-600"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path
+                                                    d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" />
+                                                <text x="9" y="17" font-size="8" fill="red">PDF</text>
+                                            </svg>
+                                            <span>Unduh PDF</span>
+
+                                            {{-- Word --}}
+                                        @elseif (in_array($ext, ['doc', 'docx']))
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-600"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path
+                                                    d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" />
+                                                <text x="8" y="17" font-size="8" fill="blue">W</text>
+                                            </svg>
+                                            <span>Unduh Dokumen</span>
+
+                                            {{-- Gambar --}}
+                                        @elseif (in_array($ext, ['jpg', 'jpeg', 'png']))
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-600"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                                <path d="M21 15l-5-5L5 21" />
+                                            </svg>
+                                            <span>Unduh Gambar</span>
+
+                                            {{-- Default --}}
+                                        @else
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-600"
+                                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0
+                         0 1-2-2v-4" />
+                                                <polyline points="7 10 12 15 17 10" />
+                                                <line x1="12" y1="15" x2="12" y2="3" />
+                                            </svg>
+                                            <span>Unduh Lampiran</span>
+                                        @endif
+                                    </a>
                                 @endif
+
                             </div>
                             <div class="px-3 py-2 bg-white">
                                 <p class="text-gray-600">{{ $comment->message }}</p>

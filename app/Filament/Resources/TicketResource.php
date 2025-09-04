@@ -105,20 +105,22 @@ class TicketResource extends Resource
                     ->label('Lampiran Identitas')
                     ->directory('lampiran-identitas')
                     ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg'])
-                    ->maxSize(1024) // KB
-                    ->required(),
-                FileUpload::make('lampiran_akta')
-                    ->label('Lampiran Akta Pendirian Badan Hukum')
-                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg'])
-                    ->directory('lampiran-akta')
                     ->maxSize(1024)
+                    ->downloadable()
+                    ->required(),
+                FileUpload::make('lampiran_apbh')
+                    ->label('Lampiran Akta Pendirian Badan Hukum')
+                    ->disk('public')
+                    ->directory('lampiran_apbh')
+                    ->downloadable()
+                    ->previewable()
+                    ->openable()
                     ->visible(
                         fn(callable $get) =>
-                        in_array(
-                            optional(\App\Models\Pemohon::find($get('master_kat_pemohon_id')))->name,
-                            ['LSM/NGO', 'Instansi Pemerintah']
-                        )
+                        in_array($get('master_kat_pemohon_id'), [3, 4, 5])
+                        // 3=LSM/NGO, 4=Instansi Pemerintah, 5=Lembaga Pemerintah
                     ),
+
                 TextInput::make('email')
                     ->email()
                     ->required(),
@@ -144,6 +146,7 @@ class TicketResource extends Resource
                     ->directory('lampiran-dukung')
                     ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'])
                     ->maxSize(1024)
+                    ->downloadable()
                     ->nullable()
                     ->visible(
                         fn(callable $get) =>
@@ -205,6 +208,7 @@ class TicketResource extends Resource
                     ->directory('lampiran-bukti')
                     ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'])
                     ->maxSize(1024)
+                    ->downloadable()
                     ->visible(
                         fn(callable $get) =>
                         optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))
@@ -215,6 +219,7 @@ class TicketResource extends Resource
                     ->directory('lampiran-bukti')
                     ->acceptedFileTypes(['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'])
                     ->maxSize(1024)
+                    ->downloadable()
                     ->visible(
                         fn(callable $get) =>
                         optional(\App\Models\LayananInformasi::find($get('master_layanan_informasi_id')))

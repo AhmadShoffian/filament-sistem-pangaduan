@@ -5,11 +5,12 @@ namespace App\Mail;
 use App\Models\Ticket;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\SerializesModels;
 
 class TicketCreatedMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use SerializesModels;
 
     public $ticket;
 
@@ -21,6 +22,6 @@ class TicketCreatedMail extends Mailable
     public function build()
     {
         return $this->subject('Permohonan Informasi #' . $this->ticket->nomor_ticket)
-                    ->markdown('emails.ticket_created');
+                    ->view('emails.ticket_created'); 
     }
 }
