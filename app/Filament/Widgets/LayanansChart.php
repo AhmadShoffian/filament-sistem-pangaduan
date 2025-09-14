@@ -11,6 +11,9 @@ class LayanansChart extends ChartWidget
     protected int|string|array $columnSpan = 1;
     protected static ?string $heading = 'Distribusi Ticket per Jenis Layanan';
 
+    // tampil setelah BidangsChart
+    protected static ?int $sort = 3;
+
     protected function getData(): array
     {
         $ticketByJenis = Ticket::select('master_layanan_informasi.name', DB::raw('count(*) as total'))
@@ -29,9 +32,6 @@ class LayanansChart extends ChartWidget
                         '#F59E0B', 
                         '#EF4444', 
                         '#8B5CF6',
-                        '#eef65cff',  
-                        '#f15cf6ff',  
-                        '#f65c92ff',  
                     ],
                 ],
             ],

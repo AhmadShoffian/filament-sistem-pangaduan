@@ -216,6 +216,74 @@
                 border-radius: 50%;
             }
         }
+
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .card {
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            transition: 0.3s;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .card i {
+            font-size: 36px;
+            color: #f1c40f;
+            margin-bottom: 10px;
+        }
+
+        .card h3 {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .card:hover {
+            border-color: #f1c40f;
+            transform: translateY(-5px);
+        }
+
+        /* Tambahan untuk mobile */
+        @media (max-width: 768px) {
+            .card {
+                height: 150px;
+            }
+
+            .card i {
+                font-size: 28px;
+            }
+
+            .card h3 {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                height: auto;
+                padding: 20px 10px;
+            }
+
+            .card i {
+                font-size: 24px;
+            }
+        }
     </style>
 </head>
 
@@ -291,14 +359,78 @@
                             Beranda
                         </a>
                     </div>
-                    <div class="subscribe-section mt-5">
+                    {{-- <div class="subscribe-section mt-5">
                         <form action="#" method="GET" class="subscribe-form wow fadeInRight" data-wow-delay=".4s"
                             style="color:#000000">
                             <input type="text" name="ticket_number" id="ticket_number" value=""
                                 placeholder="Lacak Permohonan" required>
                             <button type="submit"><i class="fas fa-search"></i></button>
                         </form>
+                    </div> --}}
+
+
+                    <div class="card-container mt-8">
+                        <a href="https://siak.isi.ac.id/">
+                            <div class="card">
+                                <!-- Siakad (Akademik) -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-yellow-400 mb-2"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 14l9-5-9-5-9 5 9 5z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 14l6.16-3.422A12.083 12.083 0 0118 20H6a12.083 12.083 0 01-.16-9.422L12 14z" />
+                                </svg>
+                                <h3>Siakad</h3>
+                            </div>
+                        </a>
+
+                        <a href="https://pmb.isi.ac.id">
+                            <div class="card">
+                                <!-- PMB ISI -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-blue-400 mb-2"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20v-2a3 3 0 00-5.356-1.857M17 20H7m0 0v-2a3 3 0 015.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M12 12a4 4 0 100-8 4 4 0 000 8z" />
+                                </svg>
+                                <h3>PMB ISI</h3>
+                            </div>
+                        </a>
+
+                        <a href="https://elearning.isi.ac.id">
+                            <div class="card">
+                                <!-- Elearning -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-green-400 mb-2"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9.75 17L9 20l-1 .5L7 17m10 0l-.75 3 .75.5 1-3m-5.25-6.25h.008v.008h-.008V10.75zM9.75 13h4.5a2.25 2.25 0 012.25 2.25V18h-9v-2.75a2.25 2.25 0 012.25-2.25z" />
+                                </svg>
+                                <h3>Elearning</h3>
+                            </div>
+                        </a>
+
+                        <a href="https://journal.isi.ac.id/">
+                            <div class="card">
+                                <!-- Jurnal -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-purple-400 mb-2"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 20h9M12 4h9M12 12h9M4 6h16M4 18h16" />
+                                </svg>
+                                <h3>Jurnal</h3>
+                            </div>
+                        </a>
+
+                        {{-- <div class="card">
+                            <!-- Lapor -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-red-400 mb-2"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M11.25 3v8.25H5.25l7.5 9 7.5-9h-6V3h-3z" />
+                            </svg>
+                            <h3>Lapor</h3>
+                        </div> --}}
                     </div>
+
                 </div>
 
                 <!-- Bottom Area -->
@@ -466,7 +598,7 @@
                                 maksimal 200kb</small>
                         </div>
 
-                        <div class="mb-4" >
+                        <div class="mb-4">
                             <label for="lapbhfile" class="block text-gray-700 font-medium mb-2">
                                 Lampiran Akta Pendirian Badan Hukum <span class="text-red-500">*</span>
                             </label>
@@ -633,7 +765,7 @@
                         </div>
 
                         <div class="mb-6">
-                            <label class="block text-gray-700 font-medium mb-2">
+                            <label id="alasanKeberatanLabel" class="block text-gray-700 font-medium mb-2">
                                 Alasan mengajukan keberatan
                             </label>
 
@@ -707,6 +839,7 @@
         const subjectSelect = document.getElementById("subject");
         const applicantSelect = document.getElementById("applicant");
         const pungliRequired = ["email", "rincian_informasi", "dfiles"];
+        const wewenangRequired = ["email", "rincian_informasi", "sfiles"];
         const requiredLabels = document.querySelectorAll("label span.text-red-500");
         if (!subjectSelect) return;
 
@@ -813,7 +946,9 @@
         // helper toggle bintang merah
         function toggleRequiredLabel(input, required = true) {
             if (!input) return;
-            const label = input.closest("div")?.querySelector("label");
+
+            // Cari label berdasarkan atribut for
+            const label = document.querySelector(`label[for='${input.id}']`);
             if (!label) return;
 
             let star = label.querySelector("span.text-red-500");
@@ -831,6 +966,7 @@
                 if (star) star.remove();
             }
         }
+
 
         function clearAllRequired() {
             const fields = [
@@ -911,47 +1047,82 @@
                     alasanKeberatanInputs[0].setAttribute("required", "required");
                 }
 
-                // document.getElementById("name")?.setAttribute("required", "required");
-                // document.getElementById("email")?.setAttribute("required", "required");
-                // document.getElementById("applicant")?.setAttribute("required", "required");
-                // document.getElementById("identity")?.setAttribute("required", "required");
-                // document.getElementById("ifiles")?.setAttribute("required", "required");
-                // document.getElementById("handphone")?.setAttribute("required", "required");
-                // document.getElementById("address")?.setAttribute("required", "required");
-                // document.getElementById("category")?.setAttribute("required", "required");
-                // document.getElementById("dfiles")?.setAttribute("required", "required");
-
                 toggleRequiredLabel(document.getElementById("name"), true);
                 toggleRequiredLabel(document.getElementById("email"), true);
+                toggleRequiredLabel(document.getElementById("rincian_informasi"), true);
                 toggleRequiredLabel(document.getElementById("applicant"), true);
                 toggleRequiredLabel(document.getElementById("identity"), true);
-                toggleRequiredLabel(document.getElementById("ifile"), true);
+               toggleRequiredLabel(document.getElementById("ifiles"), true);
                 toggleRequiredLabel(document.getElementById("phone"), true);
                 toggleRequiredLabel(document.getElementById("address"), true);
                 toggleRequiredLabel(document.getElementById("category"), true);
                 toggleRequiredLabel(document.getElementById("dfiles"), true);
 
-            } else if (layananName.includes("pelanggaran pejabat")) {
-                showField(namapejabatFields, namaPejabatInput);
-                showField(pejabatFields, jabatanPejabatInput);
-                showField(penyalahgunaanField, penyalahgunaanInput);
-                if (lampiranBuktiBerkas) lampiranBuktiBerkas.style.display = "block";
-                if (lampiranDataDukung) lampiranDataDukung.style.display = "none";
-                if (rincianInformasiField) rincianInformasiField.style.display = "none";
-            } else if (layananName.includes("pelanggaran mitra")) {
-                showField(namamitraFields, namaMitraInput);
-                showField(mitraFields, jabatanMitraInput);
-                showField(penyalahgunaanField, penyalahgunaanInput);
-                if (lampiranBuktiBerkas) lampiranBuktiBerkas.style.display = "block";
-                if (lampiranDataDukung) lampiranDataDukung.style.display = "none";
-                if (rincianInformasiField) rincianInformasiField.style.display = "none";
+                if (layananName.includes("pengajuan keberatan")) {
+                    showField(tujuanKeberatanField, tujuanKeberatanInput);
+                    toggleRequiredLabel(document.getElementById("keberatan"), true);
+
+                    const alasanLabel = document.getElementById("alasanKeberatanLabel");
+                    if (alasanLabel && !alasanLabel.querySelector("span.text-red-500")) {
+                        const span = document.createElement("span");
+                        span.className = "text-red-500";
+                        span.innerText = " *";
+                        alasanLabel.appendChild(span);
+                    }
+                    if (alasanKeberatanInputs.length > 0) {
+                        alasanKeberatanInputs[0].setAttribute("required", "required");
+                    }
+
+                }
+
+
+
+                // } else if (layananName.includes("pelanggaran pejabat")) {
+                //     showField(namapejabatFields, namaPejabatInput);
+                //     showField(pejabatFields, jabatanPejabatInput);
+                //     showField(penyalahgunaanField, penyalahgunaanInput);
+                //     if (lampiranBuktiBerkas) lampiranBuktiBerkas.style.display = "block";
+                //     if (lampiranDataDukung) lampiranDataDukung.style.display = "none";
+                //     if (rincianInformasiField) rincianInformasiField.style.display = "none";
             } else if (layananName.includes("pengaduan pungli & gratifikasi")) {
                 toggleRequiredLabel(document.getElementById("email"), true);
                 toggleRequiredLabel(document.getElementById("rincian_informasi"), true);
                 toggleRequiredLabel(document.getElementById("category"), true);
                 toggleRequiredLabel(document.getElementById("dfiles"), true);
-            }
+            } else if (layananName.includes("penyalahgunaan wewenang") ||
+                layananName.includes("pelanggaran mitra") ||
+                layananName.includes("pelanggaran pejabat")) {
 
+                // Field umum
+                showField(penyalahgunaanField, penyalahgunaanInput);
+                if (lampiranBuktiBerkas) lampiranBuktiBerkas.style.display = "block";
+                if (lampiranDataDukung) lampiranDataDukung.style.display = "none";
+                if (rincianInformasiField) rincianInformasiField.style.display = "none";
+
+                toggleRequiredLabel(document.getElementById("email"), true);
+                toggleRequiredLabel(document.getElementById("rincian_informasi"), true);
+                toggleRequiredLabel(document.getElementById("category"), true);
+                toggleRequiredLabel(document.getElementById("penyalahgunaan"), true);
+                toggleRequiredLabel(document.getElementById("sfiles"), true);
+
+                // Khusus pelanggaran mitra
+                if (layananName.includes("pelanggaran mitra")) {
+                    showField(namamitraFields, namaMitraInput);
+                    showField(mitraFields, jabatanMitraInput);
+
+                    toggleRequiredLabel(document.getElementById("nama_mitra"), true);
+                    toggleRequiredLabel(document.getElementById("jabatan_mitra"), true);
+                }
+
+                // Khusus pelanggaran pejabat
+                if (layananName.includes("pelanggaran pejabat")) {
+                    showField(namapejabatFields, namaPejabatInput);
+                    showField(pejabatFields, jabatanPejabatInput);
+
+                    toggleRequiredLabel(document.getElementById("nama_pejabat"), true);
+                    toggleRequiredLabel(document.getElementById("jabatan"), true);
+                }
+            }
 
         });
 

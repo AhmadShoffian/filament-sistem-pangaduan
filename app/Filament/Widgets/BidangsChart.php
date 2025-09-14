@@ -11,6 +11,9 @@ class BidangsChart extends ChartWidget
     protected int|string|array $columnSpan = 1;
     protected static ?string $heading = 'Distribusi Ticket per Jenis Bidang';
 
+    // tampil setelah StatsDashboard
+    protected static ?int $sort = 2;
+
     protected function getData(): array
     {
         $ticketByJenis = Ticket::select('master_kat_bidang.name', DB::raw('count(*) as total'))
@@ -35,7 +38,6 @@ class BidangsChart extends ChartWidget
             'labels' => $ticketByJenis->pluck('name'),
         ];
     }
-    
 
     protected function getType(): string
     {

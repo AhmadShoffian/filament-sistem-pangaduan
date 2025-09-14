@@ -35,7 +35,7 @@ class TicketExporter extends Exporter
             ExportColumn::make('nama_lengkap'),
             ExportColumn::make('nomor_identitas'),
             ExportColumn::make('lampiran_identitas'),
-            // ExportColumn::make('lampiran_apbh'),
+            ExportColumn::make('lampiran_apbh'),
             ExportColumn::make('email'),
             ExportColumn::make('no_telepon'),
             ExportColumn::make('alamat'),
