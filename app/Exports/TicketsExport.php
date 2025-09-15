@@ -30,6 +30,13 @@ class TicketsExport implements FromCollection, WithHeadings, WithStyles, WithEve
                     $t->no_telepon,
                     $t->status,
                     $t->created_at->format('Y-m-d H:i'),
+
+                    // Lampiran (bisa null kalau tidak ada)
+                    $t->lampiran_identitas ? url('storage/'.$t->lampiran_identitas) : '',
+                    $t->lampiran_apbh ? url('storage/'.$t->lampiran_apbh) : '',
+                    $t->lampiran_bukti_pejabat ? url('storage/'.$t->lampiran_bukti_pejabat) : '',
+                    $t->lampiran_bukti_mitra ? url('storage/'.$t->lampiran_bukti_mitra) : '',
+                    $t->lampiran_dukung ? url('storage/'.$t->lampiran_dukung) : '',
                 ];
             });
     }
@@ -55,6 +62,13 @@ class TicketsExport implements FromCollection, WithHeadings, WithStyles, WithEve
             'No Telepon',
             'Status',
             'Created At',
+
+            // Tambahan lampiran
+            'Lampiran Identitas',
+            'Lampiran Akta Pendirian Badan Hukum',
+            'Lampiran Bukti Pejabat',
+            'Lampiran Bukti Mitra',
+            'Lampiran Data Dukung',
         ];
     }
 
@@ -81,7 +95,7 @@ class TicketsExport implements FromCollection, WithHeadings, WithStyles, WithEve
                 $sheet->insertNewRowBefore(1, 1);
 
                 // Judul di baris pertama (A1:J1 merge)
-                $sheet->mergeCells('A1:J1');
+                $sheet->mergeCells('A1:O1');
                 $sheet->setCellValue('A1', 'Daftar Ticket');
 
                 // Style judul
@@ -95,7 +109,7 @@ class TicketsExport implements FromCollection, WithHeadings, WithStyles, WithEve
                 ]);
 
                 // Auto size kolom
-                foreach (range('A', 'J') as $col) {
+                foreach (range('A', 'O') as $col) {
                     $sheet->getColumnDimension($col)->setAutoSize(true);
                 }
             },
