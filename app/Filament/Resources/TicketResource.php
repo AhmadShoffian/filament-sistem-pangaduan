@@ -11,26 +11,25 @@ use Filament\Tables\Table;
 use App\Exports\TicketsExport;
 use App\Models\LayananInformasi;
 use Filament\Resources\Resource;
-use Filament\Tables\Actions\ExportAction;
 use Maatwebsite\Excel\Facades\Excel;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
-use App\Filament\Exports\TicketExporter;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\FileUpload;
+use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\CheckboxList;
 use Maatwebsite\Excel\Excel as ExcelWriter;
+use Filament\Tables\Actions\ExportBulkAction;
 use pxlrbt\FilamentExcel\Exports\ExcelExport;
 use App\Filament\Resources\TicketResource\Pages;
 use Filament\Actions\Exports\Enums\ExportFormat;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TicketResource\RelationManagers;
 use App\Filament\Resources\TicketResource\RelationManagers\CommentsRelationManager;
-use Filament\Tables\Actions\ExportBulkAction;
 
 class TicketResource extends Resource
 {
@@ -311,39 +310,24 @@ class TicketResource extends Resource
                     }),
             ])
 
-            // ->headerActions([
-            //     ExportAction::make()
-            //         ->exports([
-            //             ExcelExport::make()
-            //                 ->fromTable() // langsung ambil data dari tabel
-            //                 ->askForFilename() // bisa tanya nama file
-            //                 ->withFilename(fn() => 'tickets-' . now()->format('Y-m-d')) // default filename
-            //         ]),
-            // ])
-
-            // ->headerActions([
-            //     ExportAction::make('export')
-            //         ->label('Export Excel')
-            //         ->icon('heroicon-o-arrow-down-tray')
-            //         ->exports([
-            //             ExcelExport::make()
-            //                 ->fromTable() // ambil kolom & formatting dari Table (ikut filter & search)
-            //                 ->withWriterType(ExcelWriter::XLSX)
-            //                 ->withFilename(fn() => 'tickets-' . now()->format('Y-m-d_H-i')),
-            //             // ->only([...]) atau ->except([...]) kalau mau batasi kolom
-            //             // ->modifyQueryUsing(fn ($query) => $query->where('status', 'open'))
-            //         ]),
-            // ])
             ->headerActions([
-                ExportAction::make()
-                    ->exporter(TicketExporter::class),
+                Tables\Actions\Action::make('exportExcel')
+                    ->label('Export Excel')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->action(function () {
+                        return \Maatwebsite\Excel\Facades\Excel::download(
+                            new \App\Exports\TicketsExport,
+                            'tickets-' . now()->format('Y-m-d_H-i') . '.xlsx'
+                        );
+                    }),
             ])
+
 
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-                ExportBulkAction::make()->exporter(TicketExporter::class),
+                ExportBulkAction::make()->exporter(TicketsExport::class),
             ])
             ->emptyStateActions([
                 Tables\Actions\CreateAction::make(),

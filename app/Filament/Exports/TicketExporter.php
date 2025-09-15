@@ -1,74 +1,94 @@
 <?php
 
-namespace App\Filament\Exports;
+namespace App\Exports;
 
 use App\Models\Ticket;
-use Filament\Actions\Exports\ExportColumn;
-use Filament\Actions\Exports\Exporter;
-use Filament\Actions\Exports\Models\Export;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithStyles;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Maatwebsite\Excel\Events\AfterSheet;
 
-class TicketExporter extends Exporter
+class TicketsExport implements FromCollection, WithHeadings, WithStyles, WithEvents
 {
-    protected static ?string $model = Ticket::class;
+    public function collection()
+    {
+        return Ticket::with(['kategoriPemohon','kategoriBidang','jenisLayanan'])
+            ->get()
+            ->map(function ($t) {
+                return [
+                    $t->id,
+                    $t->nomor_ticket,
+                    $t->jenisLayanan?->name,
+                    $t->kategoriPemohon?->name,
+                    $t->kategoriBidang?->name,
+                    $t->nama_lengkap,
+                    $t->email,
+                    $t->no_telepon,
+                    $t->status,
+                    $t->created_at->format('Y-m-d H:i'),
+                ];
+            });
+    }
 
-    public static function getColumns(): array
+    public function headings(): array
     {
         return [
-            ExportColumn::make('id')
-                ->label('ID'),
-            ExportColumn::make('nomor_ticket'),
-            ExportColumn::make('kategoriPemohon.name')
-                ->label('Kategori Pemohon'),
-
-            ExportColumn::make('kategoriBidang.name')
-                ->label('Kategori Bidang'),
-
-            ExportColumn::make('jenisLayanan.name')
-                ->label('Layanan Informasi'),
-
-            ExportColumn::make('kategoriInformasi.name')
-                ->label('Kategori Informasi'),
-
-            ExportColumn::make('kategoriKeberatan.name')
-                ->label('Kategori Keberatan'),
-
-            ExportColumn::make('nama_lengkap'),
-            ExportColumn::make('nomor_identitas'),
-            ExportColumn::make('lampiran_identitas'),
-            ExportColumn::make('lampiran_apbh'),
-            ExportColumn::make('email'),
-            ExportColumn::make('no_telepon'),
-            ExportColumn::make('alamat'),
-            ExportColumn::make('tujuan_permohonan_informasi'),
-            ExportColumn::make('tujuan_keberatan'),
-            ExportColumn::make('nama_pejabat'),
-            ExportColumn::make('nama_mitra'),
-            ExportColumn::make('jabatan_pejabat'),
-            ExportColumn::make('jabatan_mitra'),
-            ExportColumn::make('penyalahgunaan_pejabat'),
-            ExportColumn::make('penyalahgunaan_mitra'),
-            ExportColumn::make('rincian_informasi'),
-            ExportColumn::make('lampiran_bukti_pejabat'),
-            ExportColumn::make('lampiran_bukti_mitra'),
-            ExportColumn::make('lampiran_dukung'),
-            ExportColumn::make('status'),
-            // ExportColumn::make('created_by'),
-            // ExportColumn::make('updated_by'),
-            // ExportColumn::make('deleted_by'),
-            // ExportColumn::make('deleted_at'),
-            // ExportColumn::make('created_at'),
-            // ExportColumn::make('updated_at'),
+            'ID',
+            'Nomor Ticket',
+            'Jenis Layanan',
+            'Kategori Pemohon',
+            'Kategori Bidang',
+            'Nama Lengkap',
+            'Email',
+            'No Telepon',
+            'Status',
+            'Created At',
         ];
     }
 
-    public static function getCompletedNotificationBody(Export $export): string
+    public function styles(Worksheet $sheet)
     {
-        $body = 'Your ticket export has completed and ' . number_format($export->successful_rows) . ' ' . str('row')->plural($export->successful_rows) . ' exported.';
+        return [
+            2 => [ // Header ada di baris ke-2 (karena baris 1 dipakai judul)
+                'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => '2563EB'], // biru Tailwind
+                ],
+            ],
+        ];
+    }
 
-        if ($failedRowsCount = $export->getFailedRowsCount()) {
-            $body .= ' ' . number_format($failedRowsCount) . ' ' . str('row')->plural($failedRowsCount) . ' failed to export.';
-        }
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function (AfterSheet $event) {
+                $sheet = $event->sheet->getDelegate();
 
-        return $body;
+                // Geser data ke baris ke-3 karena baris 1 judul, baris 2 header
+                $sheet->insertNewRowBefore(1, 1);
+
+                // Judul di baris pertama (A1:J1 merge)
+                $sheet->mergeCells('A1:J1');
+                $sheet->setCellValue('A1', 'Daftar Ticket');
+
+                // Style judul
+                $sheet->getStyle('A1')->applyFromArray([
+                    'font' => ['bold' => true, 'size' => 16, 'color' => ['rgb' => 'FFFFFF']],
+                    'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+                    'fill' => [
+                        'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                        'startColor' => ['rgb' => '16A34A'], // hijau Tailwind
+                    ],
+                ]);
+
+                // Auto size kolom
+                foreach (range('A', 'J') as $col) {
+                    $sheet->getColumnDimension($col)->setAutoSize(true);
+                }
+            },
+        ];
     }
 }
